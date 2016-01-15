@@ -48,6 +48,8 @@ project.method('my.hello').after(function (params, callback) {
     callback(null, params);
   }
 });
+// notes: when register hook, you can use wildcard in the method name
+// for example, "my.*"
 // call function
 project.method('my.hello').call({a: 123, b: 456}, function (err, ret) {
   console.log(err, ret); // => null, 6
