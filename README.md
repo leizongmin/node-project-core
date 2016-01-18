@@ -59,11 +59,11 @@ project.method('my.hello').call({a: 123, b: 456}, function (err, ret) {
 // extends
 project.extends({
   // before: optional, will be called before initializing plugins
-  before: function () {},
+  before: function (next) {},
   // init: initialize plugin
-  init: function () {},
+  init: function (next) {},
   // after: optional, will be called after plugins initialized
-  after: function () {},
+  after: function (next) {},
 });
 
 // init queue
