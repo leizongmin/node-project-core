@@ -175,3 +175,27 @@ describe('ProjectCore', function () {
   });
 
 });
+
+
+describe('extends ProjectCore', function () {
+
+  it('extends', function (done) {
+
+    const project = new ProjectCore();
+
+    project.extends({
+      init: function (next) {
+        this.hello = msg => `hello, ${msg}`;
+        next();
+      },
+    });
+
+    project.init(err => {
+      assert.equal(err, null);
+      assert.equal(project.hello('core'), 'hello, core');
+      done();
+    });
+
+  });
+
+});
