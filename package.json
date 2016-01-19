@@ -1,6 +1,6 @@
 {
   "name": "project-core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "project core",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "watch-compile": "./node_modules/.bin/babel src -d target --watch",
     "test": "npm run compile && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- target/test/*.js",
     "changelog": "./node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -w -r 0",
-    "publish": "npm run compile && npm run test"
+    "prepublish": "npm run compile && npm run test"
   },
   "repository": {
     "type": "git",
