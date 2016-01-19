@@ -1,6 +1,6 @@
 {
   "name": "project-core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "project core",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/leizongmin/node-project-core#readme",
   "dependencies": {
-    "escape-regexp": "0.0.1",
     "escape-string-regexp": "^1.0.4",
     "lei-ns": "^0.2.0",
     "lei-utils": "^2.0.1"
