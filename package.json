@@ -1,6 +1,6 @@
 {
   "name": "project-core",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "project core",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   "dependencies": {
     "escape-string-regexp": "^1.0.4",
     "lei-ns": "^0.2.0",
-    "lei-utils": "^2.0.1"
+    "lei-utils": "2.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.4.0",

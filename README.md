@@ -100,8 +100,24 @@ project.event.once('ready', function () {});
 // you can emit a custom event
 project.event.emit('haha', Math.random());
 
+// config
+project.config.load('./config');
+console.log(project.config.get('web.port'));
+console.log(project.config.has('web.port'));
+
 // init
 project.init();
+```
+
+### Example config file
+
+```javascript
+module.exports = function (set, get, has) {
+
+  set('web.session.secret', '11111111');
+  // you can use the get(name) and has(name) to get specific config value
+
+};
 ```
 
 ### Extends and republish your own `project-core`

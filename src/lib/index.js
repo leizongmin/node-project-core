@@ -4,6 +4,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
+import path from 'path';
 import {EventEmitter} from 'events';
 import {MethodManager} from './method';
 import {Namespace} from 'lei-ns';
@@ -15,7 +16,11 @@ function runSeries(list, thisArg, callback) {
     if (err) return callback(err);
     let fn = list.shift();
     if (!fn) return callback(null);
-    fn.call(thisArg, next);
+    try {
+      fn.call(thisArg, next);
+    } catch (err) {
+      return callback(err);
+    }
   };
   next(null);
 }
@@ -33,7 +38,24 @@ export default class ProjectCore {
     this.init.add = (fn) => {
       this._checkInited();
       this.init._queue.push(fn);
-    }
+    };
+
+    this.config = new Namespace();
+    this.config.load = file => {
+      require(path.resolve(file))(
+        (n, v) => this.config.set(n, v),
+        (n) => this.config.get(n),
+        (n) => this.config.has(n),
+      );
+    };
+    this.config._get = this.config.get;
+    this.config.get = (n) => {
+      const v = this.config._get(n);
+      if (v === undefined) {
+        throw new TypeError(`config field "${n}" is undefined`);
+      }
+      return v;
+    };
 
     this._extends = {
       before: [],
