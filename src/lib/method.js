@@ -16,18 +16,27 @@ export class Method {
     this._after = [];
   }
 
+  _wrap(fn) {
+    return function (params, callback) {
+      const ret = fn(params, callback);
+      if (ret instanceof Promise) {
+        ret.catch(callback);
+      }
+    };
+  }
+
   register(fn) {
-    this._fn = fn;
+    this._fn = this._wrap(fn);
     return this;
   }
 
   before(fn) {
-    this._before.push(fn);
+    this._before.push(this._wrap(fn));
     return this;
   }
 
   after(fn) {
-    this._after.push(fn);
+    this._after.push(this._wrap(fn));
     return this;
   }
 
