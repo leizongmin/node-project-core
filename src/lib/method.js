@@ -47,7 +47,11 @@ export class Method {
         if (err) return cb(err);
         const fn = list.shift();
         if (!fn) return cb(null, result);
-        fn(result, next);
+        try {
+          fn(result, next);
+        } catch (err) {
+          return cb(err);
+        }
       };
       const cb = (err, result) => {
         if (err) {

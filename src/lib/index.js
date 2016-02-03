@@ -17,7 +17,10 @@ function runSeries(list, thisArg, callback) {
     let fn = list.shift();
     if (!fn) return callback(null);
     try {
-      fn.call(thisArg, next);
+      const r = fn.call(thisArg, next);
+      if (r instanceof Promise) {
+        r.catch(callback);
+      }
     } catch (err) {
       return callback(err);
     }
