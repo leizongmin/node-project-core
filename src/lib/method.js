@@ -17,12 +17,18 @@ export class Method {
   }
 
   _wrap(fn) {
+
+    if (typeof fn !== 'function') {
+      throw new TypeError(`argument must be a function`);
+    }
+
     return function (params, callback) {
       const ret = fn(params, callback);
       if (ret instanceof Promise) {
         ret.catch(callback);
       }
     };
+
   }
 
   register(fn) {
@@ -42,6 +48,7 @@ export class Method {
 
   call(params, callback) {
     return new Promise((resolve, reject) => {
+
       const list = [].concat(this._before, this._fn, this._after);
       const next = (err, result) => {
         if (err) return cb(err);
@@ -62,7 +69,13 @@ export class Method {
           callback && callback(null, result);
         }
       };
-      next(null, params);
+
+      if (this._fn === null) {
+        return cb(new TypeError(`please register a handler for method ${this.name}`));
+      } else {
+        return next(null, params);
+      }
+
     });
   }
 
