@@ -100,6 +100,10 @@ project.event.once('ready', function () {});
 // you can emit a custom event
 project.event.emit('haha', Math.random());
 
+// add ready event listener
+// if project was inited, callback immediately
+project.ready(function () {});
+
 // config
 project.config.load('./config');
 console.log(project.config.get('web.port'));

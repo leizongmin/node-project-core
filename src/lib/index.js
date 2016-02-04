@@ -121,4 +121,12 @@ export default class ProjectCore {
 
   }
 
+  ready(callback) {
+    if (this.inited) {
+      process.nextTick(callback);
+    } else {
+      this.event.once('ready', callback);
+    }
+  }
+
 }
