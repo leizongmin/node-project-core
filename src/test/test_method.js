@@ -38,8 +38,7 @@ describe('Method', function () {
     const status = {};
 
     method.call({a: 123, b: 456}, (err, ret) => {
-      assert.equal(err, null);
-      assert.deepEqual(ret, {a: 123, b: 456});
+      assert.ok(err instanceof Error);
       done();
     });
 

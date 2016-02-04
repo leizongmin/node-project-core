@@ -174,8 +174,32 @@ describe('ProjectCore', function () {
 
   });
 
-});
+  it('project.ready', function (done) {
 
+    const project = new ProjectCore();
+
+    const status = {};
+
+    project.ready(() => {
+      status.ready = true;
+    });
+
+    project.init(err => {
+      assert.equal(err, null);
+
+      process.nextTick(() => {
+        assert.equal(status.ready, true);
+
+        project.ready(() => {
+          project.ready(() => done());
+        });
+      });
+
+    });
+
+  });
+
+});
 
 describe('extends ProjectCore', function () {
 
@@ -199,3 +223,54 @@ describe('extends ProjectCore', function () {
   });
 
 });
+
+describe('ProjectCore.method', function () {
+
+  it('normal', function (done) {
+
+    const project = new ProjectCore();
+
+    project.init.add(done => {
+      project.method('hello').register(function (params, callback) {
+        callback(null, `hello, ${params}`);
+      });
+      done();
+    });
+
+    project.init(err => {
+      assert.equal(err, null);
+
+      project.method('hello').call('world', (err, ret) => {
+        assert.equal(err, null);
+        assert.equal(ret, 'hello, world');
+        done();
+      });
+    });
+
+  });
+
+  it('call before init', function (done) {
+
+    const project = new ProjectCore();
+
+    project.init.add(done => {
+      project.method('hello').register(function (params, callback) {
+        callback(null, `hello, ${params}`);
+      });
+      done();
+    });
+
+    project.method('hello').call('world', (err, ret) => {
+      assert.equal(err, null);
+      assert.equal(ret, 'hello, world');
+      done();
+    });
+
+    project.init(err => {
+      assert.equal(err, null);
+    });
+
+  });
+
+});
+
