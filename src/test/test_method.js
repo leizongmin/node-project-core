@@ -11,6 +11,26 @@ import {Method, MethodManager} from '../lib/method';
 
 describe('Method', function () {
 
+  it('register none function', function (done) {
+
+    const method = new Method();
+
+    assert.throws(function () {
+      method.register(123);
+    });
+
+    assert.throws(function () {
+      method.before(null);
+    });
+
+    assert.throws(function () {
+      method.after('ok');
+    });
+
+    done();
+
+  });
+
   it('call #register', function (done) {
 
     const method = new Method();
@@ -219,6 +239,74 @@ describe('Method', function () {
 
   });
 
+  it('catch normal error', function (done) {
+
+    const method = new Method();
+    const status = {before: false, after: false};
+
+    method.register(function (params, callback) {
+      throw new Error('just for test');
+    });
+
+    method.before(function (params, callback) {
+      status.before = true;
+      process.nextTick(function () {
+        callback(null, params);
+      });
+    });
+
+    method.after(function (params, callback) {
+      status.after = true;
+      process.nextTick(function () {
+        callback(null, params);
+      });
+    });
+
+    method.call(123, function (err, result) {
+      assert.equal(err.message, 'just for test');
+
+      assert.equal(status.before, true);
+      assert.equal(status.after, false);
+
+      done();
+    });
+
+  });
+
+  it('catch async function error', function (done) {
+
+    const method = new Method();
+    const status = {before: false, after: false};
+
+    method.register(async function (params, callback) {
+      throw new Error('just for test');
+    });
+
+    method.before(function (params, callback) {
+      status.before = true;
+      process.nextTick(function () {
+        callback(null, params);
+      });
+    });
+
+    method.after(function (params, callback) {
+      status.after = true;
+      process.nextTick(function () {
+        callback(null, params);
+      });
+    });
+
+    method.call(123, function (err, result) {
+      assert.equal(err.message, 'just for test');
+
+      assert.equal(status.before, true);
+      assert.equal(status.after, false);
+
+      done();
+    });
+
+  });
+
 });
 
 
@@ -243,6 +331,10 @@ describe('MethodManager', function () {
 
       manager.method('math.*').before(function (params, callback) {
         callback(null, params.map(v => Number(v)));
+      });
+
+      manager.method('math.*').after(function (result, callback) {
+        callback(isNaN(result) ? new Error('result is not a number') : null, result);
       });
 
     } catch (err) {
@@ -274,6 +366,16 @@ describe('MethodManager', function () {
       console.log(err.stack);
       throw err;
     }
+
+    let ret7ok = false;
+    try {
+      const ret7 = await manager.method('math.add').call([1, NaN]);
+      console.log(ret7);
+    } catch (err) {
+      ret7ok = true;
+      console.log(err);
+    }
+    if (!ret7ok) throw new Error('should throws error `result is not a number`');
 
     done();
 
