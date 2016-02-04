@@ -66,6 +66,9 @@ export default class ProjectCore {
       after: [],
     };
 
+    this._lazycallMethods = new Map();
+    this.event.once('ready', () => this._lazycallMethods.clear());
+
     this.inited = false;
     this.event.once('ready', () => this.inited = true);
 
@@ -77,8 +80,48 @@ export default class ProjectCore {
     }
   }
 
+  _getLazycallMethod(name) {
+    if (this._lazycallMethods.has(name)) {
+      return this._lazycallMethods.get(name);
+    } else {
+      const self = this;
+      const method = {
+        register(fn) {
+          return self._methodManager.method(name).register(fn);
+        },
+        before(fn) {
+          return self._methodManager.method(name).before(fn);
+        },
+        after(fn) {
+          return self._methodManager.method(name).after(fn);
+        },
+        call(params, callback) {
+          return new Promise((resolve, reject) => {
+            self.ready(() => {
+              self._methodManager.method(name).call(params, (err, ret) => {
+                if (err) {
+                  reject(err);
+                  callback && callback(err);
+                } else {
+                  resolve(ret);
+                  callback && callback(null, ret);
+                }
+              });
+            });
+          });
+        },
+      };
+      this._lazycallMethods.set(name, method);
+      return method;
+    }
+  }
+
   method(name) {
-    return this._methodManager.method(name);
+    if (this.inited) {
+      return this._methodManager.method(name);
+    } else {
+      return this._getLazycallMethod(name);
+    }
   }
 
   extends(info) {
