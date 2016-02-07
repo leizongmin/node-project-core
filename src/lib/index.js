@@ -8,25 +8,8 @@ import path from 'path';
 import {EventEmitter} from 'events';
 import {MethodManager} from './method';
 import {Namespace} from 'lei-ns';
-import utils from 'lei-utils';
+import utils from './utils';
 
-
-function runSeries(list, thisArg, callback) {
-  const next = err => {
-    if (err) return callback(err);
-    let fn = list.shift();
-    if (!fn) return callback(null);
-    try {
-      const r = fn.call(thisArg, next);
-      if (r instanceof Promise) {
-        r.catch(callback);
-      }
-    } catch (err) {
-      return callback(err);
-    }
-  };
-  next(null);
-}
 
 export default class ProjectCore {
 
@@ -35,7 +18,8 @@ export default class ProjectCore {
     this._methodManager = new MethodManager();
     this.data = new Namespace();
     this.event = new EventEmitter();
-    this.utils = utils.extend({});
+    this.event.setMaxListeners(0);
+    this.utils = utils.extends();
 
     this.init._queue = [];
     this.init.add = (fn) => {
@@ -145,13 +129,13 @@ export default class ProjectCore {
     this._checkInited();
 
     this._extends = this._extends.before.concat(this._extends.init, this._extends.after);
-    runSeries(this._extends, this, err => {
+    utils.runSeries(this._extends, this, err => {
       if (err) {
         this.event.emit('init error', err);
         return callback && callback(err);
       }
 
-      runSeries(this.init._queue, this, err => {
+      utils.runSeries(this.init._queue, this, err => {
         if (err) {
           this.event.emit('init error', err);
           return callback && callback(err);
