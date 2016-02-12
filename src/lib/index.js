@@ -17,9 +17,22 @@ export default class ProjectCore {
 
     this._methodManager = new MethodManager();
     this.data = new Namespace();
-    this.event = new EventEmitter();
-    this.event.setMaxListeners(0);
     this.utils = utils.extends();
+
+    this._event = new EventEmitter();
+    this._event.setMaxListeners(0);
+    this.event = {};
+    this.event.on = (e, fn) => this._event.on(e, utils.wrapFn(fn, this));
+    this.event.once = (e, fn) => this._event.once(e, utils.wrapFn(fn, this));
+    this.event.emit = (e, ...args) => {
+      args.push(err => this.emit('error', err));
+      this._event.emit(e, ...args);
+    };
+    this._event.on('error', err => {
+      if (this._event._events.error.length < 2) {
+        console.error(err.stack || err);
+      }
+    });
 
     this.init._queue = [];
     this.init.add = (fn) => {
@@ -150,7 +163,12 @@ export default class ProjectCore {
 
   ready(callback) {
     if (this.inited) {
-      process.nextTick(callback);
+      process.nextTick(() => {
+        callback = utils.wrapFn(callback);
+        callback(null, err => {
+          this.event.emit('error', err);
+        });
+      });
     } else {
       this.event.once('ready', callback);
     }
