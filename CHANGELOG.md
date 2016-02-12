@@ -1,3 +1,19 @@
+<a name="0.0.10"></a>
+## [0.0.10](https://github.com/leizongmin/node-project-core/compare/v0.0.9...v0.0.10) (2016-02-12)
+
+
+### Bug Fixes
+
+* **core:** `event` supported async function ([19e5496](https://github.com/leizongmin/node-project-core/commit/19e5496))
+
+
+
+<a name="0.0.9"></a>
+## [0.0.9](https://github.com/leizongmin/node-project-core/compare/v0.0.8...v0.0.9) (2016-02-07)
+
+
+
+
 <a name="0.0.8"></a>
 ## [0.0.8](https://github.com/leizongmin/node-project-core/compare/v0.0.7...v0.0.8) (2016-02-04)
 
