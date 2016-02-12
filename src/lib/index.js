@@ -131,13 +131,13 @@ export default class ProjectCore {
     this._extends = this._extends.before.concat(this._extends.init, this._extends.after);
     utils.runSeries(this._extends, this, err => {
       if (err) {
-        this.event.emit('init error', err);
+        this.event.emit('error', err);
         return callback && callback(err);
       }
 
       utils.runSeries(this.init._queue, this, err => {
         if (err) {
-          this.event.emit('init error', err);
+          this.event.emit('error', err);
           return callback && callback(err);
         }
 
