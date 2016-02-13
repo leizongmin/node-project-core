@@ -4,11 +4,11 @@
   "description": "project core",
   "main": "index.js",
   "scripts": {
-    "test-only": "npm run compile && ./node_modules/.bin/mocha target/test/*.js",
-    "compile": "./node_modules/.bin/babel src -d target",
-    "watch-compile": "./node_modules/.bin/babel src -d target --watch",
-    "test": "npm run compile && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- target/test/*.js",
-    "changelog": "./node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -w -r 0",
+    "test": "npm run compile && mocha target/test/*.js",
+    "coverage": "npm run compile && istanbul cover _mocha -- target/test/*.js",
+    "compile": "babel src -d target",
+    "compile:w": "babel src -d target --watch",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0",
     "prepublish": "npm run compile && npm run test"
   },
   "repository": {
@@ -24,11 +24,12 @@
   "dependencies": {
     "escape-string-regexp": "^1.0.4",
     "lei-ns": "^0.2.0",
-    "lei-utils": "2.0.4"
+    "lei-utils": "2.0.5"
   },
   "devDependencies": {
     "babel-cli": "^6.4.0",
     "babel-core": "^6.4.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015-node4": "^2.0.2",
     "babel-preset-stage-0": "^6.3.13",
     "conventional-changelog": "^0.5.3",
