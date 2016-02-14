@@ -33,6 +33,9 @@ export default class ProjectCore {
         console.error(err.stack || err);
       }
     });
+    this._event.once('ready', () => {
+      this._registerMethodHooks();
+    });
 
     this.init._queue = [];
     this.init.add = (fn) => {
@@ -64,6 +67,7 @@ export default class ProjectCore {
     };
 
     this._lazycallMethods = new Map();
+    this._methodHooks = [];
     this.event.once('ready', () => this._lazycallMethods.clear());
 
     this.inited = false;
@@ -84,13 +88,15 @@ export default class ProjectCore {
       const self = this;
       const method = {
         register(fn) {
-          return self._methodManager.method(name).register(fn);
+          self._methodManager.method(name).register(fn);
         },
         before(fn) {
-          return self._methodManager.method(name).before(fn);
+          //return self._methodManager.method(name).before(fn);
+          self._methodHooks.push({name, fn, type: 'before'});
         },
         after(fn) {
-          return self._methodManager.method(name).after(fn);
+          //return self._methodManager.method(name).after(fn);
+          self._methodHooks.push({name, fn, type: 'before'});
         },
         call(params, callback) {
           return new Promise((resolve, reject) => {
@@ -110,6 +116,12 @@ export default class ProjectCore {
       };
       this._lazycallMethods.set(name, method);
       return method;
+    }
+  }
+
+  _registerMethodHooks() {
+    for (const item of this._methodHooks) {
+      this._methodManager.method(item.name)[item.type](item.fn);
     }
   }
 
