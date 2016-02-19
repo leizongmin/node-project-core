@@ -1,3 +1,35 @@
+<a name="0.0.13"></a>
+## [0.0.13](https://github.com/leizongmin/node-project-core/compare/v0.0.13...v0.0.13) (2016-02-19)
+
+
+
+
+<a name="0.0.13"></a>
+## [0.0.13](https://github.com/leizongmin/node-project-core/compare/v0.0.12...v0.0.13) (2016-02-19)
+
+
+### Bug Fixes
+
+* **method:** fix $.method(name).after() ([9db6b17](https://github.com/leizongmin/node-project-core/commit/9db6b17))
+
+
+
+<a name="0.0.12"></a>
+## [0.0.12](https://github.com/leizongmin/node-project-core/compare/v0.0.11...v0.0.12) (2016-02-18)
+
+
+### Bug Fixes
+
+* **method:** 包含通配符的method将会在ready事件触发后执行注册 ([6575628](https://github.com/leizongmin/node-project-core/commit/6575628))
+
+
+
+<a name="0.0.11"></a>
+## [0.0.11](https://github.com/leizongmin/node-project-core/compare/v0.0.10...v0.0.11) (2016-02-13)
+
+
+
+
 <a name="0.0.10"></a>
 ## [0.0.10](https://github.com/leizongmin/node-project-core/compare/v0.0.9...v0.0.10) (2016-02-12)
 
