@@ -91,12 +91,10 @@ export default class ProjectCore {
           self._methodManager.method(name).register(fn);
         },
         before(fn) {
-          //return self._methodManager.method(name).before(fn);
           self._methodHooks.push({name, fn, type: 'before'});
         },
         after(fn) {
-          //return self._methodManager.method(name).after(fn);
-          self._methodHooks.push({name, fn, type: 'before'});
+          self._methodHooks.push({name, fn, type: 'after'});
         },
         call(params, callback) {
           return new Promise((resolve, reject) => {
