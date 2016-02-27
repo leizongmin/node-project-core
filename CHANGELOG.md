@@ -1,6 +1,11 @@
-<a name="0.0.13"></a>
-## [0.0.13](https://github.com/leizongmin/node-project-core/compare/v0.0.13...v0.0.13) (2016-02-19)
+<a name="0.0.14"></a>
+## [0.0.14](https://github.com/leizongmin/node-project-core/compare/v0.0.13...v0.0.14) (2016-02-27)
 
+
+### Features
+
+* **config:** pass config instance when `config.load()` ([a789917](https://github.com/leizongmin/node-project-core/commit/a789917))
+* **init:** add method `$.init.load()` to load a module ([c348120](https://github.com/leizongmin/node-project-core/commit/c348120))
 
 
 
