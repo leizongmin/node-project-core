@@ -45,7 +45,7 @@ export default class ProjectCore {
 
     this.config = new Namespace();
     this.config.load = file => {
-      require(path.resolve(file))(
+      require(path.resolve(file)).call(this.config,
         (n, v) => this.config.set(n, v),
         (n) => this.config.get(n),
         (n) => this.config.has(n),
