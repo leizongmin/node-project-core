@@ -5,10 +5,15 @@
  */
 
 import _utils from 'lei-utils';
+import createDebug from 'debug';
 
 const utils = _utils.extend({});
 
 delete utils.extend;
+
+utils.debug = function (name) {
+  return createDebug('project-core:' + name);
+};
 
 utils.extends = function () {
   const ret = {};

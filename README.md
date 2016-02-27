@@ -91,8 +91,11 @@ project.extends({
 
 // init queue
 // all the functions that added to init queue will be called sequentially
-project.init.add(function () {});
-project.init.add(function () {});
+project.init.add(function (next) {});
+project.init.add(function (next) {});
+
+// add file or dir to init queue
+project.init.load('./inits');
 
 // events
 // ready: will be emitted when project inited
