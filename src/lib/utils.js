@@ -14,6 +14,7 @@ delete utils.extend;
 utils.debug = function (name) {
   return createDebug('project-core:' + name);
 };
+const debug = utils.debug('utils');
 
 utils.extends = function () {
   const ret = {};
@@ -29,6 +30,7 @@ utils.runSeries = function (list, thisArg, callback) {
     let fn = list.shift();
     if (!fn) return callback(null);
     try {
+      if (fn.__sourceLine) debug('runSeries: at %s', fn.__sourceLine);
       const r = fn.call(thisArg, next);
       if (r instanceof Promise) {
         r.catch(callback);

@@ -42,6 +42,8 @@ export default class ProjectCore {
     this.init._queue = [];
     this.init.add = (fn) => {
       this._checkInited();
+      fn.__sourceLine = utils.getCallerSourceLine();
+      debug('init.add: at %s', fn.__sourceLine);
       this.init._queue.push(fn);
     };
     this.init._loadFile = (f) => {
@@ -186,6 +188,7 @@ export default class ProjectCore {
 
     this.initing = true;
     this._checkInited();
+    debug('initing');
 
     this._extends = this._extends.before.concat(this._extends.init, this._extends.after);
     utils.runSeries(this._extends, this, err => {
