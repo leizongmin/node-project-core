@@ -1,3 +1,15 @@
+<a name="0.0.15"></a>
+## [0.0.15](https://github.com/leizongmin/node-project-core/compare/v0.0.14...v0.0.15) (2016-03-03)
+
+
+### Features
+
+* **core:** add report() method ([bf11846](https://github.com/leizongmin/node-project-core/commit/bf11846))
+* **core:** prints more debug info ([066416d](https://github.com/leizongmin/node-project-core/commit/066416d))
+* **method:** print more debug info ([43ec11c](https://github.com/leizongmin/node-project-core/commit/43ec11c))
+
+
+
 <a name="0.0.14"></a>
 ## [0.0.14](https://github.com/leizongmin/node-project-core/compare/v0.0.13...v0.0.14) (2016-02-27)
 
