@@ -15,6 +15,7 @@ export class Method {
     this._fn = null;
     this._before = [];
     this._after = [];
+    this._check = null;
   }
 
   _wrap(fn) {
@@ -35,6 +36,11 @@ export class Method {
     wrap.__name = fn.__name = this.name;
     return wrap;
 
+  }
+
+  check(options = null) {
+    debug('method.check: %j at %s', options, utils.getCallerSourceLine());
+    this._check = options;
   }
 
   register(fn) {
@@ -61,8 +67,37 @@ export class Method {
     return this;
   }
 
-  call(params, callback) {
+  call(_params, callback) {
     return new Promise((resolve, reject) => {
+
+      const params = utils.deref(_params);
+
+      const cb = (err, result) => {
+        if (err) {
+          reject(err);
+          callback && callback(err);
+        } else {
+          resolve(result);
+          callback && callback(null, result);
+        }
+      };
+
+      try {
+        if (this._check) {
+          for (const n in this._check) {
+            if (this._check[n].required && !(n in params)) {
+              return cb(utils.missingParameterError(n));
+            }
+          }
+          for (const n in params) {
+            if (this._check[n] && this._check[n].validate && !this._check[n].validate(params[n])) {
+              return cb(utils.invalidParameterError(n));
+            }
+          }
+        }
+      } catch (err) {
+        return cb(err);
+      }
 
       const list = [].concat(this._before, this._fn, this._after);
       debug('method.call: %s handlers=%s', this.name, list.length);
@@ -75,16 +110,6 @@ export class Method {
           fn(result, next);
         } catch (err) {
           return cb(err);
-        }
-      };
-
-      const cb = (err, result) => {
-        if (err) {
-          reject(err);
-          callback && callback(err);
-        } else {
-          resolve(result);
-          callback && callback(null, result);
         }
       };
 

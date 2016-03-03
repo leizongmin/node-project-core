@@ -69,4 +69,26 @@ utils.getCallerSourceLine = function () {
   }
 };
 
+utils.deref = function (v) {
+  if (Array.isArray(v)) return v.slice();
+  if (v && typeof v === 'object') {
+    const obj = {};
+    for (const i in v) {
+      obj[i] = v[i];
+    }
+    return obj;
+  }
+  return v;
+};
+
+utils.MissingParameterError = utils.customError('missingParameterError', {code: 'missing_parameter', from: 'ProjectCore.method'});
+utils.missingParameterError = function (name) {
+  return new utils.MissingParameterError(`missing parameter "${name}"`, {name: name});
+};
+
+utils.InvalidParameterError = utils.customError('invalidParameterError', {code: 'invalid_parameter', from: 'ProjectCore.method'});
+utils.invalidParameterError = function (name) {
+  return new utils.InvalidParameterError(`invalid parameter "${name}"`, {name: name});
+};
+
 export default utils;

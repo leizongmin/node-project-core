@@ -38,49 +38,58 @@ $ npm install project-core --save
 const ProjectCore = require('project-core');
 
 // create new instance
-const project = new ProjectCore();
+const $ = global.$ = new ProjectCore();
 
 // namespace, you can store data in memory
-project.data.set('abc.e.f', 123);
-console.log(project.data.get('abc'));
+$.data.set('abc.e.f', 123);
+console.log($.data.get('abc'));
 // => {e: {f: 123}}
 
 // util functions, extends from lei-utils
-console.log(project.utils.md5('haha'));
+console.log($.utils.md5('haha'));
 // add your own function
-project.utils.say = function () {};
+$.utils.say = function () {};
 
 // methods
 // register, must be async function
 // the first argument is an params object
 // the last argument is callback function
-project.method('my.hello').register(function (params, callback) {
+$.method('my.hello').register(function (params, callback) {
   callback(null, params.a + params.b);
 });
 // register hook: before
-project.method('my.hello').before(function (params, callback) {
+$.method('my.hello').before(function (params, callback) {
   params.a = Number(params.a);
   params.b = Number(params.b);
   callback(null, params);
 });
 // register hook: after
-project.method('my.hello').after(function (params, callback) {
+$.method('my.hello').after(function (params, callback) {
   if (isNaN(params)) {
     callback(new TypeError('result is not a number'));
   } else {
     callback(null, params);
   }
 });
+// register checker
+// if missing required parameter, throws an $.utils.MissingParameterError
+// if validating parameter failed, throws an $.utils.InvalidParameterError
+$.method('my.hello').check({
+  a: {                            // parameter name
+    required: true,               // set to true if it is required
+    validate: (v) => !isNaN(v),   // set validator
+  },
+});
 // notes: when register hook, you can use wildcard in the method name
 // for example, "my.*"
 // call function
-project.method('my.hello').call({a: 123, b: 456}, function (err, ret) {
+$.method('my.hello').call({a: 123, b: 456}, function (err, ret) {
   console.log(err, ret); // => null, 6
   // if passed {c: 123, d: 456} the result would be => TypeError: result is not a number
 });
 
 // extends
-project.extends({
+$.extends({
   // before: optional, will be called before initializing plugins
   before: function (next) {},
   // init: initialize plugin
@@ -91,29 +100,29 @@ project.extends({
 
 // init queue
 // all the functions that added to init queue will be called sequentially
-project.init.add(function (next) {});
-project.init.add(function (next) {});
+$.init.add(function (next) {});
+$.init.add(function (next) {});
 
 // add file or dir to init queue
-project.init.load('./inits');
+$.init.load('./inits');
 
 // events
 // ready: will be emitted when project inited
-project.event.once('ready', function () {});
+$.event.once('ready', function () {});
 // you can emit a custom event
-project.event.emit('haha', Math.random());
+$.event.emit('haha', Math.random());
 
 // add ready event listener
 // if project was inited, callback immediately
-project.ready(function () {});
+$.ready(function () {});
 
 // config
-project.config.load('./config');
-console.log(project.config.get('web.port'));
-console.log(project.config.has('web.port'));
+$.config.load('./config');
+console.log($.config.get('web.port'));
+console.log($.config.has('web.port'));
 
 // init
-project.init();
+$.init();
 ```
 
 ### Example config file
@@ -134,22 +143,22 @@ module.exports = function (set, get, has) {
 
 const ProjectCore = require('project-core');
 
-const project = new ProjectCore();
+const $ = new ProjectCore();
 
 // extends example
-project.extends(require('./extends_config'));
-project.extends(require('./extends_orm'));
-project.extends(require('./extends_cache'));
-project.extends(require('./extends_module'));
-project.extends(require('./extends_status'));
+$.extends(require('./extends_config'));
+$.extends(require('./extends_orm'));
+$.extends(require('./extends_cache'));
+$.extends(require('./extends_module'));
+$.extends(require('./extends_status'));
 
 // do something when ready
-project.event.once('ready', function () {
+$.event.once('ready', function () {
   // after ready event has been emitted, you can not change anything on project-core instance any more
 });
 
 // exports
-module.exports = project;
+module.exports = $;
 ```
 
 

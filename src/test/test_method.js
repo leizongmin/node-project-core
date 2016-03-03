@@ -6,7 +6,9 @@
 
 import assert from 'assert';
 import mocha from 'mocha';
+import async from 'async';
 import {Method, MethodManager} from '../lib/method';
+import utils from '../lib/utils';
 
 
 describe('Method', function () {
@@ -304,6 +306,84 @@ describe('Method', function () {
 
       done();
     });
+
+  });
+
+  it('check() - #1', function (done) {
+
+    const method = new Method();
+
+    method.register(function (params, callback) {
+      callback(null, `${params.a}:${params.b}`);
+    });
+
+    method.check({
+      a: {required: true, validate: (v) => !isNaN(v)},
+      b: {validate: (v) => (typeof v === 'string' && v[0] === '$')},
+    });
+
+    async.series([
+      function (next) {
+
+        method.call({}, function (err, ret) {
+          if (err instanceof utils.MissingParameterError) {
+            if (err.name !== 'a') {
+              return next(new Error('parameter name must be "a"'));
+            }
+            return next();
+          } else {
+            return next(new Error('should throws MissingParameterError'));
+          }
+        });
+
+      },
+      function (next) {
+
+        method.call({a: 'a'}, function (err, ret) {
+          if (err instanceof utils.InvalidParameterError) {
+            if (err.name !== 'a') {
+              return next(new Error('parameter name must be "a"'));
+            }
+            return next();
+          } else {
+            return next(new Error('should throws InvalidParameterError'));
+          }
+        });
+
+      },
+      function (next) {
+
+        method.call({a: '123', b: 'bb'}, function (err, ret) {
+          if (err instanceof utils.InvalidParameterError) {
+            if (err.name !== 'b') {
+              return next(new Error('parameter name must be "b"'));
+            }
+            return next();
+          } else {
+            return next(new Error('should throws InvalidParameterError'));
+          }
+        });
+
+      },
+      function (next) {
+
+        method.call({a: '123', b: '$b'}, function (err, ret) {
+          assert.equal(err, null);
+          assert.equal(ret, '123:$b');
+          next();
+        });
+
+      },
+      function (next) {
+
+        method.call({a: '123'}, function (err, ret) {
+          assert.equal(err, null);
+          assert.equal(ret, '123:undefined');
+          next();
+        });
+
+      },
+    ], done);
 
   });
 

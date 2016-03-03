@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run compile && mocha target/test/*.js",
+    "t:method": "mocha target/test/test_method.js",
+    "t:project": "mocha target/test/test_project.js",
     "coverage": "npm run compile && istanbul cover _mocha -- target/test/*.js",
     "compile": "babel src -d target",
     "compile:w": "rm -Rf target && babel src -d target --watch",
@@ -29,6 +31,7 @@
     "rd": "0.0.2"
   },
   "devDependencies": {
+    "async": "^1.5.2",
     "babel-cli": "^6.4.0",
     "babel-core": "^6.4.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",

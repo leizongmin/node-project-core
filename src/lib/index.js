@@ -126,6 +126,10 @@ export default class ProjectCore {
           debug('method.register: %s', name);
           self._methodManager.method(name).register(fn);
         },
+        check(options) {
+          debug('method.check: %s', name);
+          self._methodManager.method(name).check(options);
+        },
         before(fn) {
           debug('method.before: %s', name);
           self._methodHooks.push({name, fn, type: 'before'});
