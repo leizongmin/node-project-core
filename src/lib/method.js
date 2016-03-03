@@ -5,7 +5,8 @@
  */
 
 import escapeStringRegexp from 'escape-string-regexp';
-
+import utils from './utils';
+const debug = utils.debug('method');
 
 export class Method {
 
@@ -22,26 +23,40 @@ export class Method {
       throw new TypeError(`argument must be a function`);
     }
 
-    return function (params, callback) {
+    const wrap = function (params, callback) {
+      debug(' - run - %s %s at %s', fn.__type, fn.__name, fn.__sourceLine);
       const ret = fn(params, callback);
       if (ret instanceof Promise) {
         ret.catch(callback);
       }
     };
+    wrap.__sourceLine = fn.__sourceLine;
+    wrap.__type = fn.__type;
+    wrap.__name = fn.__name = this.name;
+    return wrap;
 
   }
 
   register(fn) {
+    fn.__type = 'main';
+    fn.__sourceLine = utils.getCallerSourceLine();
+    debug('method.register: %s at %s', this.name, fn.__sourceLine);
     this._fn = this._wrap(fn);
     return this;
   }
 
   before(fn) {
+    fn.__type = 'before';
+    fn.__sourceLine = utils.getCallerSourceLine();
+    debug('method.before: %s at %s', this.name, fn.__sourceLine);
     this._before.push(this._wrap(fn));
     return this;
   }
 
   after(fn) {
+    fn.__type = 'after';
+    fn.__sourceLine = utils.getCallerSourceLine();
+    debug('method.after: %s at %s', this.name, fn.__sourceLine);
     this._after.push(this._wrap(fn));
     return this;
   }
@@ -50,6 +65,8 @@ export class Method {
     return new Promise((resolve, reject) => {
 
       const list = [].concat(this._before, this._fn, this._after);
+      debug('method.call: %s handlers=%s', this.name, list.length);
+
       const next = (err, result) => {
         if (err) return cb(err);
         const fn = list.shift();
@@ -60,6 +77,7 @@ export class Method {
           return cb(err);
         }
       };
+
       const cb = (err, result) => {
         if (err) {
           reject(err);

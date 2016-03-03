@@ -13,7 +13,6 @@ import rd from 'rd';
 import utils from './utils';
 const debug = utils.debug('core');
 
-
 export default class ProjectCore {
 
   constructor() {

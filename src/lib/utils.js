@@ -55,4 +55,16 @@ utils.wrapFn = function (fn, self = null) {
   }
 };
 
+utils.getCallerSourceLine = function () {
+  const dir = __dirname + '/';
+  const stack = (new Error()).stack.split('\n').slice(1);
+  for (let line of stack) {
+    line = line.trim();
+    if (line.replace(/\\/g, '/').indexOf(dir) === -1) {
+      const s = line.match(/\((.*)\)\s*$/);
+      if (s) return s[1];
+    }
+  }
+};
+
 export default utils;
