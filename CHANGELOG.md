@@ -1,3 +1,13 @@
+<a name="0.0.16"></a>
+## [0.0.16](https://github.com/leizongmin/node-project-core/compare/v0.0.15...v0.0.16) (2016-03-03)
+
+
+### Features
+
+* **method:** add method.check(options) ([891ee2c](https://github.com/leizongmin/node-project-core/commit/891ee2c))
+
+
+
 <a name="0.0.15"></a>
 ## [0.0.15](https://github.com/leizongmin/node-project-core/compare/v0.0.14...v0.0.15) (2016-03-03)
 
