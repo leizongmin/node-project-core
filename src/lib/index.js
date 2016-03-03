@@ -37,6 +37,7 @@ export default class ProjectCore {
     });
     this._event.once('ready', () => {
       this._registerMethodHooks();
+      this.report();
     });
 
     this.init._queue = [];
@@ -222,6 +223,22 @@ export default class ProjectCore {
     } else {
       this.event.once('ready', callback);
     }
+  }
+
+  report(print = false) {
+    const lines = [];
+    for (const m of this._methodManager._method.values()) {
+      lines.push(`method ${m.name} at ${m._fn && m._fn.__sourceLine}`);
+      for (const f of m._before) {
+        lines.push(` - before hook at ${f.__sourceLine}`);
+      }
+      for (const f of m._after) {
+        lines.push(` - after hook at ${f.__sourceLine}`);
+      }
+    }
+    const str = lines.join('\n');
+    debug('report:\n%s', str);
+    return str;
   }
 
 }
