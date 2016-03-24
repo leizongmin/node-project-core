@@ -82,7 +82,11 @@ export default class ProjectCore {
     this.config = new Namespace();
     this.config.load = file => {
       debug('config.load: %s', file);
-      require(path.resolve(file)).call(this.config,
+      const initConfig = require(path.resolve(file));
+      if (typeof initConfig !== 'function') {
+        throw new Error(`incorrect config file format in file "${file}"`);
+      }
+      initConfig.call(this.config,
         (n, v) => this.config.set(n, v),
         (n) => this.config.get(n),
         (n) => this.config.has(n),
