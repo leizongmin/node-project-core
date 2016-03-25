@@ -26,20 +26,49 @@ utils.extends = function () {
   return ret;
 };
 
-utils.runSeries = function (list, thisArg, callback) {
+utils.runSeries = function (list, thisArg, cb) {
+
+  let isCallback = false;
+  const callback = err => {
+    if (isCallback) {
+      debug('runSeries: multi callback(err=%s)', err);
+    } else {
+      isCallback = true;
+      debug('runSeries: callback, err=%s', err);
+      process.nextTick(() => cb(err));
+    }
+  };
+
   const next = err => {
+
     if (err) return callback(err);
+    if (isCallback) return callback(new Error('has been callback'));
+
     let fn = list.shift();
     if (!fn) return callback(null);
+
+    let isPromise = false;
+    let r = null;
+
     try {
+
       if (fn.__sourceLine) debug('runSeries: at %s', fn.__sourceLine);
-      const r = fn.call(thisArg, next);
-      if (r instanceof Promise) {
-        r.catch(callback);
-      }
+      r = fn.call(thisArg, (err) => {
+        if (isPromise) return callback(new Error(`please don't use callback in an async function`));
+        next(err);
+      });
+      isPromise = utils.isPromise(r);
+
     } catch (err) {
       return callback(err);
     }
+
+    if (isPromise) {
+      r.then(ret => {
+        next();
+      }).catch(callback);
+    }
+
   };
   next(null);
 };
@@ -50,7 +79,7 @@ utils.wrapFn = function (fn, self = null) {
     const callback = args[args.length - 1];
     try {
       const ret = fn.apply(self, args);
-      if (ret instanceof Promise) {
+      if (utils.isPromise(ret)) {
         ret.catch(callback);
       }
     } catch (err) {

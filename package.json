@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run compile && mocha target/test/*.js",
+    "test:dev": "mocha target/test/*.js",
     "t:method": "mocha target/test/test_method.js",
     "t:project": "mocha target/test/test_project.js",
     "coverage": "npm run compile && istanbul cover _mocha -- target/test/*.js",
@@ -24,10 +25,10 @@
   },
   "homepage": "https://github.com/leizongmin/node-project-core#readme",
   "dependencies": {
-    "debug": "^2.2.0",
-    "escape-string-regexp": "^1.0.4",
-    "lei-ns": "^0.3.0",
-    "lei-utils": "2.0.5",
+    "debug": "2.2.0",
+    "escape-string-regexp": "1.0.4",
+    "lei-ns": "0.3.0",
+    "lei-utils": "2.1.0",
     "rd": "0.0.2"
   },
   "devDependencies": {

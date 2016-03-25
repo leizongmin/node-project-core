@@ -125,6 +125,85 @@ describe('ProjectCore', function () {
 
   });
 
+  it('project.init #async function', function (done) {
+
+    const project = new ProjectCore();
+
+    const status = {};
+
+    project.init.add(async function () {
+      status.a = true;
+    });
+
+    project.init.add(async function () {
+      status.b = true;
+    });
+
+    project.init.add(async function () {
+      status.c = true;
+    });
+
+    project.init.add(function (next) {
+      status.d = true;
+      next();
+    });
+
+    project.init(function (err) {
+      assert.equal(err, null);
+      assert.equal(status.a, true);
+      assert.equal(status.b, true);
+      assert.equal(status.c, true);
+      assert.equal(status.d, true);
+      done();
+    });
+
+  });
+
+  it('project.init #async function - do not use callback', function (done) {
+
+    const project = new ProjectCore();
+
+    const status = {};
+
+    async function sleep(ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    project.init.add(async function () {
+      await sleep(10);
+      status.a = true;
+    });
+
+    project.init.add(async function () {
+      await sleep(10);
+      status.b = true;
+    });
+
+    project.init.add(async function (next) {
+      await sleep(10);
+      status.c = true;
+      next();
+    });
+
+    project.init.add(async function () {
+      await sleep(10);
+      status.d = true;
+    });
+
+    project.init(function (err) {
+      assert.notEqual(err, null);
+      assert.equal(err.message, `please don\'t use callback in an async function`);
+      assert.equal(status.a, true);
+      assert.equal(status.b, true);
+      assert.equal(status.c, true);
+      assert.equal(status.d, undefined);
+      done();
+    });
+
+  });
+
   it('project.extends & project.init #error', function (done) {
 
     const project = new ProjectCore();
@@ -273,4 +352,3 @@ describe('ProjectCore.method', function () {
   });
 
 });
-

@@ -102,6 +102,8 @@ $.extends({
 // all the functions that added to init queue will be called sequentially
 $.init.add(function (next) {});
 $.init.add(function (next) {});
+// support async function (don't need to use callback)
+$.init.add(async function () {});
 
 // add file or dir to init queue
 $.init.load('./inits');
