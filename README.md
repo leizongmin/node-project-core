@@ -57,6 +57,10 @@ $.utils.say = function () {};
 $.method('my.hello').register(function (params, callback) {
   callback(null, params.a + params.b);
 });
+// also support async function
+$.method('my.hello').register(async function (params) {
+  return params.a + params.b;
+});
 // register hook: before
 $.method('my.hello').before(function (params, callback) {
   params.a = Number(params.a);

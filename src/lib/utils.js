@@ -64,9 +64,7 @@ utils.runSeries = function (list, thisArg, cb) {
     }
 
     if (isPromise) {
-      r.then(ret => {
-        next();
-      }).catch(callback);
+      r.then(ret => next()).catch(callback);
     }
 
   };

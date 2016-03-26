@@ -280,7 +280,7 @@ describe('Method', function () {
     const method = new Method();
     const status = {before: false, after: false};
 
-    method.register(async function (params, callback) {
+    method.register(async function (params) {
       throw new Error('just for test');
     });
 
@@ -458,6 +458,110 @@ describe('MethodManager', function () {
     if (!ret7ok) throw new Error('should throws error `result is not a number`');
 
     done();
+
+  });
+
+  it('async function - call #before & after', function (done) {
+
+    const method = new Method();
+    const status = {};
+
+    function sleep(ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    method.register(async function (params) {
+      sleep(50);
+      status.register = true;
+      return params.a + params.b;
+    });
+
+    method.before(async function (params) {
+      status.before1 = true;
+      params.a = Number(params.a);
+      params.b = Number(params.b);
+      return params;
+    });
+
+    method.before(async function (params) {
+      sleep(50);
+      status.before2 = true;
+      params.a = params.a + 1000;
+      params.b = params.b + 1000;
+      return params;
+    });
+
+    method.after(async function (result) {
+      status.after1 = true;
+      return result + 1000;
+    });
+
+    method.after(async function (result) {
+      sleep(50);
+      status.after2 = true;
+      return result + 10000;
+    });
+
+    method.call({a: '123', b: '456'}, (err, ret) => {
+      assert.equal(err, null);
+      assert.deepEqual(ret, 1123 + 1456 + 1000 + 10000);
+
+      assert.equal(status.register, true);
+      assert.equal(status.before1, true);
+      assert.equal(status.before2, true);
+      assert.equal(status.after1, true);
+      assert.equal(status.after2, true);
+      done();
+    });
+
+  });
+
+  it('async function - call #error', function (done) {
+
+    const method = new Method();
+    const status = {};
+
+    method.register(async function (params) {
+      status.register = true;
+      assert.deepEqual(params, {a: 123, b: 456});
+      throw new Error('just for test');
+    });
+
+    method.call({a: 123, b: 456}, (err, ret) => {
+      assert.equal(err.message, 'just for test');
+      assert.equal(status.register, true);
+
+      done();
+    });
+
+  });
+
+  it('async function - call #do not use callback', function (done) {
+
+    const method = new Method();
+    const status = {};
+
+    function sleep(ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    method.register(async function (params, callback) {
+      await sleep(50);
+      status.register = true;
+      assert.deepEqual(params, {a: 123, b: 456});
+      callback(new Error('just for test'));
+    });
+
+    method.call({a: 123, b: 456}, (err, ret) => {
+      assert.equal(err.message, `please don't use callback in an async function`);
+      assert.equal(status.register, true);
+
+      done();
+    });
 
   });
 
