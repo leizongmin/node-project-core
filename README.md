@@ -62,10 +62,10 @@ $.method('my.hello').register(async function (params) {
   return params.a + params.b;
 });
 // register hook: before
-$.method('my.hello').before(function (params, callback) {
+$.method('my.hello').before(async function (params) {
   params.a = Number(params.a);
   params.b = Number(params.b);
-  callback(null, params);
+  return params;
 });
 // register hook: after
 $.method('my.hello').after(function (params, callback) {
