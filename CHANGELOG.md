@@ -1,14 +1,31 @@
+<a name="0.1.1"></a>
+## [0.1.1](https://github.com/leizongmin/node-project-core/compare/v0.1.0...v0.1.1) (2016-03-28)
+
+
+### Features
+
+* **core:** init.add() support sync function, don't need callback ([64e1a5b](https://github.com/leizongmin/node-project-core/commit/64e1a5b))
+* **method:** support sync function, don't need callback ([cf04386](https://github.com/leizongmin/node-project-core/commit/cf04386))
+
+
+
 <a name="0.1.0"></a>
-# [0.1.0](https://github.com/leizongmin/node-project-core/compare/v0.0.16...v0.1.0) (2016-03-26)
+# [0.1.0](https://github.com/leizongmin/node-project-core/compare/v0.0.17...v0.1.0) (2016-03-26)
+
+
+### Features
+
+* **method:** support async function ([a81545f](https://github.com/leizongmin/node-project-core/commit/a81545f))
+
+
+
+<a name="0.0.17"></a>
+## [0.0.17](https://github.com/leizongmin/node-project-core/compare/v0.0.16...v0.0.17) (2016-03-24)
 
 
 ### Bug Fixes
 
 * **config.load:** friendly error message ([edca20b](https://github.com/leizongmin/node-project-core/commit/edca20b))
-
-### Features
-
-* **method:** support async function ([a81545f](https://github.com/leizongmin/node-project-core/commit/a81545f))
 
 
 
