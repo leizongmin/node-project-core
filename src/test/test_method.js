@@ -565,4 +565,79 @@ describe('MethodManager', function () {
 
   });
 
+  it('sync function - call #before & after', function (done) {
+
+    const method = new Method();
+    const status = {};
+
+    function sleep(ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    method.register(function (params) {
+      status.register = true;
+      return params.a + params.b;
+    });
+
+    method.before(async function (params) {
+      status.before1 = true;
+      params.a = Number(params.a);
+      params.b = Number(params.b);
+      return params;
+    });
+
+    method.before(function (params) {
+      status.before2 = true;
+      params.a = params.a + 1000;
+      params.b = params.b + 1000;
+      return params;
+    });
+
+    method.after(function (result) {
+      status.after1 = true;
+      return result + 1000;
+    });
+
+    method.after(async function (result) {
+      sleep(50);
+      status.after2 = true;
+      return result + 10000;
+    });
+
+    method.call({a: '123', b: '456'}, (err, ret) => {
+      assert.equal(err, null);
+      assert.deepEqual(ret, 1123 + 1456 + 1000 + 10000);
+
+      assert.equal(status.register, true);
+      assert.equal(status.before1, true);
+      assert.equal(status.before2, true);
+      assert.equal(status.after1, true);
+      assert.equal(status.after2, true);
+      done();
+    });
+
+  });
+
+  it('sync function - call #error', function (done) {
+
+    const method = new Method();
+    const status = {};
+
+    method.register(function (params) {
+      status.register = true;
+      assert.deepEqual(params, {a: 123, b: 456});
+      throw new Error('just for test');
+    });
+
+    method.call({a: 123, b: 456}, (err, ret) => {
+      assert.equal(err.message, 'just for test');
+      assert.equal(status.register, true);
+
+      done();
+    });
+
+  });
+
 });

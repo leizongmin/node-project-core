@@ -32,7 +32,9 @@ export class Method {
     };
     wrap.__sourceLine = fn.__sourceLine;
     wrap.__type = fn.__type;
-    wrap.__name = fn.__name = this.name;
+    wrap.__name = fn.__name = this.name || 'anonymous';
+    wrap.__isSync = fn.__isSync = fn.length < 2;
+
     return wrap;
 
   }
@@ -117,6 +119,7 @@ export class Method {
         const fn = list.shift();
         if (!fn) return callback(null, result);
 
+        const isSync = fn.__isSync;
         let isPromise = false;
         let r = null;
 
@@ -133,6 +136,8 @@ export class Method {
         if (isPromise) {
           r.then(ret => next(null, ret))
            .catch(next);
+        } else if (isSync) {
+          next(null, r);
         }
 
       };
