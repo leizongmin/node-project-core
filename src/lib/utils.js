@@ -47,6 +47,7 @@ utils.runSeries = function (list, thisArg, cb) {
     let fn = list.shift();
     if (!fn) return callback(null);
 
+    const isSync = fn.length < 1;
     let isPromise = false;
     let r = null;
 
@@ -65,6 +66,8 @@ utils.runSeries = function (list, thisArg, cb) {
 
     if (isPromise) {
       r.then(ret => next()).catch(callback);
+    } else if (isSync) {
+      process.nextTick(next);
     }
 
   };

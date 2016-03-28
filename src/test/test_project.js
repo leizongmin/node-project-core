@@ -159,6 +159,42 @@ describe('ProjectCore', function () {
 
   });
 
+  it('project.init #sync function', function (done) {
+
+    const project = new ProjectCore();
+
+    const status = {};
+
+    project.init.add(function () {
+      status.a = true;
+    });
+
+    project.init.add(function (next) {
+      setTimeout(function () {
+        status.b = true;
+        next();
+      }, 100);
+    });
+
+    project.init.add(function () {
+      status.c = true;
+    });
+
+    project.init.add(function () {
+      status.d = true;
+    });
+
+    project.init(function (err) {
+      assert.equal(err, null);
+      assert.equal(status.a, true);
+      assert.equal(status.b, true);
+      assert.equal(status.c, true);
+      assert.equal(status.d, true);
+      done();
+    });
+
+  });
+
   it('project.init #async function - do not use callback', function (done) {
 
     const project = new ProjectCore();
