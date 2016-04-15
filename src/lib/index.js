@@ -86,11 +86,12 @@ export default class ProjectCore {
       if (typeof initConfig !== 'function') {
         throw new Error(`incorrect config file format in file "${file}"`);
       }
-      initConfig.call(this.config,
+      const args = [
         (n, v) => this.config.set(n, v),
         (n) => this.config.get(n),
         (n) => this.config.has(n),
-      );
+      ];
+      initConfig.call(this.config, ...args);
     };
     this.config._get = this.config.get;
     this.config.get = (n) => {
