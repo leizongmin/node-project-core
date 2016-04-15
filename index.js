@@ -4,10 +4,10 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-module.exports = exports = require('./target/lib/index').default;
+module.exports = exports = require('./dist/lib/index').default;
 exports.ProjectCore = module.exports;
 
-exports.utils = require('./target/lib/utils').default;
+exports.utils = require('./dist/lib/utils').default;
 
-exports.Method = require('./target/lib/method').Method;
-exports.MethodManager = require('./target/lib/method').MethodManager;
+exports.Method = require('./dist/lib/method').Method;
+exports.MethodManager = require('./dist/lib/method').MethodManager;
