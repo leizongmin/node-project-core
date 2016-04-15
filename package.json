@@ -9,8 +9,8 @@
     "t:method": "mocha target/test/test_method.js",
     "t:project": "mocha target/test/test_project.js",
     "coverage": "npm run compile && istanbul cover _mocha -- target/test/*.js",
-    "compile": "babel src -d target",
-    "compile:w": "rm -Rf target && babel src -d target --watch",
+    "compile": "babel src -d target --source-maps=inline",
+    "compile:w": "rm -Rf target && babel src -d target --watch --source-maps=inline",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0",
     "prepublish": "npm run changelog && npm run compile && npm run test"
   },
