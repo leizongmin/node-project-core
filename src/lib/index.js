@@ -90,6 +90,7 @@ export default class ProjectCore {
         (n, v) => this.config.set(n, v),
         (n) => this.config.get(n),
         (n) => this.config.has(n),
+        this.config,
       ];
       initConfig.call(this.config, ...args);
     };
