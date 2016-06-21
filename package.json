@@ -26,8 +26,8 @@
   "homepage": "https://github.com/leizongmin/node-project-core#readme",
   "dependencies": {
     "debug": "2.2.0",
-    "escape-string-regexp": "1.0.4",
-    "lei-ns": "0.3.0",
+    "escape-string-regexp": "^1.0.5",
+    "lei-ns": "^0.3.1",
     "lei-utils": "2.1.0",
     "rd": "0.0.2"
   },

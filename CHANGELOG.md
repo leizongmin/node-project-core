@@ -1,4 +1,10 @@
 <a name="0.1.3"></a>
+## [0.1.3](https://github.com/leizongmin/node-project-core/compare/v0.1.3...v0.1.3) (2016-06-21)
+
+
+
+
+<a name="0.1.3"></a>
 ## [0.1.3](https://github.com/leizongmin/node-project-core/compare/v0.1.2...v0.1.3) (2016-05-11)
 
 
