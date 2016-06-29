@@ -37,7 +37,7 @@
     "babel-core": "^6.5.0",
     "babel-preset-es2015-node4": "^2.1.0",
     "babel-preset-stage-3": "^6.5.0",
-    "conventional-changelog": "^0.5.3",
+    "conventional-changelog": "^1.1.0",
     "istanbul": "^0.4.2",
     "mocha": "^2.3.4"
   }
