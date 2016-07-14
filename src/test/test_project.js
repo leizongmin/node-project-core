@@ -346,8 +346,12 @@ describe('ProjectCore.method', function () {
     const project = new ProjectCore();
 
     project.init.add(done => {
-      project.method('hello').register(function (params, callback) {
+      project.method('hello')
+      .register(function (params, callback) {
         callback(null, `hello, ${params}`);
+      })
+      .catch(function (err, params, result) {
+        console.log(err);
       });
       done();
     });

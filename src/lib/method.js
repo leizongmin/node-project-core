@@ -281,6 +281,9 @@ export class MethodManager {
         after(fn) {
           filterMethod().forEach(m => m.after(fn));
         },
+        catch(fn) {
+          filterMethod().forEach(m => m.catch(fn));
+        },
         register(fn) {
           throw new Error('register method does not support wildcards');
         },

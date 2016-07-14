@@ -133,18 +133,27 @@ export default class ProjectCore {
         register(fn) {
           debug('method.register: %s', name);
           self._methodManager.method(name).register(fn);
+          return method;
         },
         check(options) {
           debug('method.check: %s', name);
           self._methodManager.method(name).check(options);
+          return method;
         },
         before(fn) {
           debug('method.before: %s', name);
           self._methodHooks.push({name, fn, type: 'before'});
+          return method;
         },
         after(fn) {
           debug('method.after: %s', name);
           self._methodHooks.push({name, fn, type: 'after'});
+          return method;
+        },
+        catch(fn) {
+          debug('method.catch: %s', name);
+          self._methodHooks.push({name, fn, type: 'catch'});
+          return method;
         },
         call(params, callback) {
           return new Promise((resolve, reject) => {
