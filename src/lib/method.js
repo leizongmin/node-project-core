@@ -12,6 +12,12 @@ const debug = utils.debug('method');
 
 export class Method {
 
+  /**
+   * Method
+   *
+   * @param {String} name
+   * @return {Object}
+   */
   constructor(name) {
     this.name = name || null;
     this._fn = null;
@@ -20,7 +26,14 @@ export class Method {
     this._check = null;
   }
 
-  _wrap(fn) {
+  /**
+   * wrap function
+   *
+   * @param {Function} fn
+   * @param {Number} baseArgc
+   * @return {Function}
+   */
+  _wrap(fn, baseArgc) {
 
     if (typeof fn !== 'function') {
       throw new TypeError(`argument must be a function`);
@@ -30,49 +43,105 @@ export class Method {
       debug(' - run - %s %s at %s', fn.__type, fn.__name, fn.__sourceLine);
       return fn(params, callback);
     };
+    // extra info
     wrap.__sourceLine = fn.__sourceLine;
     wrap.__type = fn.__type;
     wrap.__name = fn.__name = this.name || 'anonymous';
-    wrap.__isSync = fn.__isSync = fn.length < 2;
+    wrap.__isSync = fn.__isSync = fn.length <= baseArgc;
 
     return wrap;
-
   }
 
+  /**
+   * check params becore calling method
+   *
+   * example:
+   *
+   * ```
+   * check({
+   *   a: {                            // parameter name
+   *     required: true,               // set to true if it is required
+   *     validate: (v) => !isNaN(v),   // set validator
+   *   },
+   * })
+   * ```
+   *
+   * @param {Object} options
+   * @return {this}
+   */
   check(options = null) {
     debug('method.check: %j at %s', options, utils.getCallerSourceLine());
     this._check = options;
+    return this;
   }
 
+  /**
+   * register function
+   *
+   * example:
+   *
+   * ```
+   * register(function (params, callback) {
+   *   callback(null, newParams);
+   * });
+   * // or
+   * register(async function (params) {
+   *   return newParams;
+   * });
+   * ```
+   *
+   * @param {Function} fn
+   * @return {this}
+   */
   register(fn) {
     fn.__type = 'main';
     fn.__sourceLine = utils.getCallerSourceLine();
     debug('method.register: %s at %s', this.name, fn.__sourceLine);
-    this._fn = this._wrap(fn);
+    this._fn = this._wrap(fn, 1);
     return this;
   }
 
+  /**
+   * register before hook
+   *
+   * @param {Function} fn
+   * @return {this}
+   */
   before(fn) {
     fn.__type = 'before';
     fn.__sourceLine = utils.getCallerSourceLine();
     debug('method.before: %s at %s', this.name, fn.__sourceLine);
-    this._before.push(this._wrap(fn));
+    this._before.push(this._wrap(fn, 1));
     return this;
   }
 
+  /**
+   * register after hook
+   *
+   * @param {Function} fn
+   * @return {this}
+   */
   after(fn) {
     fn.__type = 'after';
     fn.__sourceLine = utils.getCallerSourceLine();
     debug('method.after: %s at %s', this.name, fn.__sourceLine);
-    this._after.push(this._wrap(fn));
+    this._after.push(this._wrap(fn, 1));
     return this;
   }
 
+  /**
+   * call method
+   *
+   * @param {Object} params
+   * @param {Function} callback
+   * @return {Promise}
+   */
   call(_params, cb) {
     return new Promise((resolve, reject) => {
 
       const params = utils.deref(_params);
 
+      // wrap callback
       let isCallback = false;
       const callback = (err, result) => {
         if (isCallback) {
@@ -91,6 +160,7 @@ export class Method {
         }
       };
 
+      // check params
       try {
         if (this._check) {
           for (const n in this._check) {
@@ -108,6 +178,7 @@ export class Method {
         return callback(err);
       }
 
+      // concat all hooks and call function list
       const list = [].concat(this._before, this._fn, this._after);
       debug('method.call: %s handlers=%s', this.name, list.length);
 
@@ -147,7 +218,6 @@ export class Method {
       } else {
         return next(null, params);
       }
-
     });
   }
 
