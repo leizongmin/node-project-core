@@ -244,7 +244,7 @@ describe('Method', function () {
   it('catch normal error', function (done) {
 
     const method = new Method();
-    const status = {before: false, after: false};
+    const status = {before: false, after: false, catch: false, catchAssert: null};
 
     method.register(function (params, callback) {
       throw new Error('just for test');
@@ -253,7 +253,7 @@ describe('Method', function () {
     method.before(function (params, callback) {
       status.before = true;
       process.nextTick(function () {
-        callback(null, params);
+        callback(null, 456);
       });
     });
 
@@ -264,11 +264,29 @@ describe('Method', function () {
       });
     });
 
+    method.catch(function (err, params, result) {
+      throw new Error('this error cannot effect the callback result');
+    });
+
+    method.catch(function (err, params, result) {
+      status.catch = true;
+      try {
+        assert.equal(err.message, 'just for test');
+        assert.equal(params, 123);
+        assert.equal(result, 456);
+      } catch (err) {
+        status.catchAssert = err;
+      }
+    });
+
     method.call(123, function (err, result) {
       assert.equal(err.message, 'just for test');
 
       assert.equal(status.before, true);
       assert.equal(status.after, false);
+      assert.equal(status.catch, true);
+
+      assert.equal(status.catchAssert, null);
 
       done();
     });
@@ -278,7 +296,7 @@ describe('Method', function () {
   it('catch async function error', function (done) {
 
     const method = new Method();
-    const status = {before: false, after: false};
+    const status = {before: false, after: false, catch: false, catchAssert: null};
 
     method.register(async function (params) {
       throw new Error('just for test');
@@ -287,7 +305,7 @@ describe('Method', function () {
     method.before(function (params, callback) {
       status.before = true;
       process.nextTick(function () {
-        callback(null, params);
+        callback(null, 456);
       });
     });
 
@@ -298,11 +316,29 @@ describe('Method', function () {
       });
     });
 
+    method.catch(function (err, params, result) {
+      throw new Error('this error cannot effect the callback result');
+    });
+
+    method.catch(function (err, params, result) {
+      status.catch = true;
+      try {
+        assert.equal(err.message, 'just for test');
+        assert.equal(params, 123);
+        assert.equal(result, 456);
+      } catch (err) {
+        status.catchAssert = err;
+      }
+    });
+
     method.call(123, function (err, result) {
       assert.equal(err.message, 'just for test');
 
       assert.equal(status.before, true);
       assert.equal(status.after, false);
+      assert.equal(status.catch, true);
+
+      assert.equal(status.catchAssert, null);
 
       done();
     });

@@ -23,16 +23,10 @@ export class Method {
     this._fn = null;
     this._before = [];
     this._after = [];
+    this._catch = [];
     this._check = null;
   }
 
-  /**
-   * wrap function
-   *
-   * @param {Function} fn
-   * @param {Number} baseArgc
-   * @return {Function}
-   */
   _wrap(fn, baseArgc) {
 
     if (typeof fn !== 'function') {
@@ -130,6 +124,36 @@ export class Method {
   }
 
   /**
+   * catch error
+   *
+   * ```
+   * catch(function (err, params, result) {
+   *   // do something to record this error
+   * });
+   * ```
+   *
+   * @param {Function} fn
+   * @return {this}
+   */
+  catch(fn) {
+    fn.__type = 'catch';
+    fn.__sourceLine = utils.getCallerSourceLine();
+    debug('method.catch: %s at %s', this.name, fn.__sourceLine);
+    this._catch.push(fn);
+    return this;
+  }
+
+  _processCatch(err, params, result) {
+    for (const fn of this._catch) {
+      try {
+        fn(err, params, result);
+      } catch (err) {
+        console.error('call catch function failed at file %s\n%s', fn.__sourceLine, err.stack || err);
+      }
+    }
+  }
+
+  /**
    * call method
    *
    * @param {Object} params
@@ -150,6 +174,7 @@ export class Method {
           isCallback = true;
           process.nextTick(() => {
             if (err) {
+              this._processCatch(err, params, result);
               reject(err);
               cb && cb(err);
             } else {
@@ -184,7 +209,7 @@ export class Method {
 
       const next = (err, result) => {
 
-        if (err) return callback(err);
+        if (err) return callback(err, result);
         if (isCallback) return callback(new Error('has been callback'));
 
         const fn = list.shift();
@@ -201,16 +226,15 @@ export class Method {
           });
           isPromise = utils.isPromise(r);
         } catch (err) {
-          return callback(err);
+          return callback(err, result);
         }
 
         if (isPromise) {
           r.then(ret => next(null, ret))
-           .catch(next);
+           .catch(err => next(err, result));
         } else if (isSync) {
           next(null, r);
         }
-
       };
 
       if (this._fn === null) {
