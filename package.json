@@ -39,6 +39,6 @@
     "babel-preset-stage-3": "^6.5.0",
     "conventional-changelog-cli": "^1.2.0",
     "istanbul": "^0.4.2",
-    "mocha": "^2.3.4"
+    "mocha": "^3.0.0"
   }
 }
