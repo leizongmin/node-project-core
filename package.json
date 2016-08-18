@@ -28,7 +28,7 @@
     "debug": "2.2.0",
     "escape-string-regexp": "^1.0.5",
     "lei-ns": "^0.3.1",
-    "lei-utils": "2.1.0",
+    "lei-utils": "2.2.0",
     "rd": "0.0.2"
   },
   "devDependencies": {
