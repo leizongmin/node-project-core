@@ -11,24 +11,6 @@ import ProjectCore from '../lib/index';
 
 describe('ProjectCore', function () {
 
-  it('project.data', function (done) {
-
-    const project = new ProjectCore();
-
-    project.data.set('a.a', 123);
-    project.data.set('a.b', 456);
-    project.data.set('b', 'abc');
-    assert.equal(project.data.has('a'), true);
-    assert.equal(project.data.has('b'), true);
-    assert.equal(project.data.has('a.a'), true);
-    assert.deepEqual(project.data.get('a'), { a: 123, b: 456 });
-    assert.deepEqual(project.data.get('b'), 'abc');
-    assert.deepEqual(project.data.all(), { a: { a: 123, b: 456 }, b: 'abc' });
-
-    done();
-
-  });
-
   it('project.utils', function (done) {
 
     const project = new ProjectCore();

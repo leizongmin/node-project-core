@@ -18,7 +18,6 @@ export default class ProjectCore {
 
   constructor() {
 
-    this.data = new Namespace();
     this.utils = utils.extends();
 
     this._event = new EventEmitter();
