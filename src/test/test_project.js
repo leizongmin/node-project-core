@@ -5,7 +5,6 @@
  */
 
 import assert from 'assert';
-import mocha from 'mocha';
 import utils from 'lei-utils';
 import ProjectCore from '../lib/index';
 
@@ -333,60 +332,6 @@ describe('extends ProjectCore', function () {
       assert.equal(err, null);
       assert.equal(project.hello('core'), 'hello, core');
       done();
-    });
-
-  });
-
-});
-
-describe('ProjectCore.method', function () {
-
-  it('normal', function (done) {
-
-    const project = new ProjectCore();
-
-    project.init.add(done => {
-      project.method('hello')
-      .register(function (params, callback) {
-        callback(null, `hello, ${ params }`);
-      })
-      .catch(function (err, params, result) {
-        console.log(err);
-      });
-      done();
-    });
-
-    project.init(err => {
-      assert.equal(err, null);
-
-      project.method('hello').call('world', (err, ret) => {
-        assert.equal(err, null);
-        assert.equal(ret, 'hello, world');
-        done();
-      });
-    });
-
-  });
-
-  it('call before init', function (done) {
-
-    const project = new ProjectCore();
-
-    project.init.add(done => {
-      project.method('hello').register(function (params, callback) {
-        callback(null, `hello, ${ params }`);
-      });
-      done();
-    });
-
-    project.method('hello').call('world', (err, ret) => {
-      assert.equal(err, null);
-      assert.equal(ret, 'hello, world');
-      done();
-    });
-
-    project.init(err => {
-      assert.equal(err, null);
     });
 
   });

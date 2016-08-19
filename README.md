@@ -50,48 +50,6 @@ console.log($.utils.md5('haha'));
 // add your own function
 $.utils.say = function () {};
 
-// methods
-// register, must be async function
-// the first argument is an params object
-// the last argument is callback function
-$.method('my.hello').register(function (params, callback) {
-  callback(null, params.a + params.b);
-});
-// also support async function
-$.method('my.hello').register(async function (params) {
-  return params.a + params.b;
-});
-// register hook: before
-$.method('my.hello').before(async function (params) {
-  params.a = Number(params.a);
-  params.b = Number(params.b);
-  return params;
-});
-// register hook: after
-$.method('my.hello').after(function (params, callback) {
-  if (isNaN(params)) {
-    callback(new TypeError('result is not a number'));
-  } else {
-    callback(null, params);
-  }
-});
-// register checker
-// if missing required parameter, throws an $.utils.MissingParameterError
-// if validating parameter failed, throws an $.utils.InvalidParameterError
-$.method('my.hello').check({
-  a: {                            // parameter name
-    required: true,               // set to true if it is required
-    validate: (v) => !isNaN(v),   // set validator
-  },
-});
-// notes: when register hook, you can use wildcard in the method name
-// for example, "my.*"
-// call function
-$.method('my.hello').call({a: 123, b: 456}, function (err, ret) {
-  console.log(err, ret); // => null, 6
-  // if passed {c: 123, d: 456} the result would be => TypeError: result is not a number
-});
-
 // extends
 $.extends({
   // before: optional, will be called before initializing plugins

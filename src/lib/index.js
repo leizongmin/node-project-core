@@ -9,7 +9,6 @@
 import path from 'path';
 import fs from 'fs';
 import { EventEmitter } from 'events';
-import { MethodManager } from './method';
 import { Namespace } from 'lei-ns';
 import rd from 'rd';
 import utils from './utils';
@@ -19,7 +18,6 @@ export default class ProjectCore {
 
   constructor() {
 
-    this._methodManager = new MethodManager();
     this.data = new Namespace();
     this.utils = utils.extends();
 
@@ -36,10 +34,6 @@ export default class ProjectCore {
       if (this._event._events.error.length < 2) {
         console.error(err.stack || err);
       }
-    });
-    this._event.once('ready', () => {
-      this._registerMethodHooks();
-      this.report();
     });
 
     this.init._queue = [];
@@ -124,72 +118,6 @@ export default class ProjectCore {
     }
   }
 
-  _getLazycallMethod(name) {
-    if (this._lazycallMethods.has(name)) {
-      return this._lazycallMethods.get(name);
-    } else {
-      const self = this;
-      const method = {
-        register(fn) {
-          debug('method.register: %s', name);
-          self._methodManager.method(name).register(fn);
-          return method;
-        },
-        check(options) {
-          debug('method.check: %s', name);
-          self._methodManager.method(name).check(options);
-          return method;
-        },
-        before(fn) {
-          debug('method.before: %s', name);
-          self._methodHooks.push({ name, fn, type: 'before' });
-          return method;
-        },
-        after(fn) {
-          debug('method.after: %s', name);
-          self._methodHooks.push({ name, fn, type: 'after' });
-          return method;
-        },
-        catch(fn) {
-          debug('method.catch: %s', name);
-          self._methodHooks.push({ name, fn, type: 'catch' });
-          return method;
-        },
-        call(params, callback) {
-          return new Promise((resolve, reject) => {
-            self.ready(() => {
-              self._methodManager.method(name).call(params, (err, ret) => {
-                if (err) {
-                  reject(err);
-                  callback && callback(err);
-                } else {
-                  resolve(ret);
-                  callback && callback(null, ret);
-                }
-              });
-            });
-          });
-        },
-      };
-      this._lazycallMethods.set(name, method);
-      return method;
-    }
-  }
-
-  _registerMethodHooks() {
-    for (const item of this._methodHooks) {
-      this._methodManager.method(item.name)[item.type](item.fn);
-    }
-  }
-
-  method(name) {
-    if (this.inited) {
-      return this._methodManager.method(name);
-    } else {
-      return this._getLazycallMethod(name);
-    }
-  }
-
   extends(info) {
 
     this._checkInited();
@@ -244,22 +172,6 @@ export default class ProjectCore {
     } else {
       this.event.once('ready', callback);
     }
-  }
-
-  report(print = false) {
-    const lines = [];
-    for (const m of this._methodManager._method.values()) {
-      lines.push(`method ${ m.name } at ${ m._fn && m._fn.__sourceLine }`);
-      for (const f of m._before) {
-        lines.push(` - before hook at ${ f.__sourceLine }`);
-      }
-      for (const f of m._after) {
-        lines.push(` - after hook at ${ f.__sourceLine }`);
-      }
-    }
-    const str = lines.join('\n');
-    debug('report:\n%s', str);
-    return str;
   }
 
 }
