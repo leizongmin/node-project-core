@@ -38,6 +38,7 @@ export default class ProjectCore {
     this.init._queue = [];
     this.init.add = (fn) => {
       this._checkInited();
+      // eslint-disable-next-line
       fn.__sourceLine = utils.getCallerSourceLine();
       debug('init.add: at %s', fn.__sourceLine);
       this.init._queue.push(fn);
@@ -107,7 +108,9 @@ export default class ProjectCore {
     this.event.once('ready', () => this._lazycallMethods.clear());
 
     this.inited = false;
-    this.event.once('ready', () => this.inited = true);
+    this.event.once('ready', () => {
+      this.inited = true;
+    });
 
   }
 
@@ -163,8 +166,7 @@ export default class ProjectCore {
   ready(callback) {
     if (this.inited) {
       process.nextTick(() => {
-        callback = utils.wrapFn(callback);
-        callback(null, err => {
+        utils.wrapFn(callback)(null, err => {
           this.event.emit('error', err);
         });
       });

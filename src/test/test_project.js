@@ -183,7 +183,7 @@ describe('ProjectCore', function () {
     const status = {};
 
     async function sleep(ms) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         setTimeout(resolve, ms);
       });
     }

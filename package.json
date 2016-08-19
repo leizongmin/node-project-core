@@ -4,7 +4,7 @@
   "description": "project core",
   "main": "index.js",
   "scripts": {
-    "test": "npm run compile && mocha dist/test/*.js",
+    "test": "npm run lint && npm run compile && mocha dist/test/*.js",
     "test:dev": "mocha dist/test/*.js",
     "t:method": "mocha dist/test/test_method.js",
     "t:project": "mocha dist/test/test_project.js",
@@ -13,7 +13,7 @@
     "compile:w": "rm -Rf dist && babel src -d dist --watch --source-maps=inline",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0",
     "prepublish": "npm run changelog && npm run test",
-    "lint": "eslint src --fix"
+    "lint": "eslint src --fix && echo 'eslint passed'"
   },
   "repository": {
     "type": "git",

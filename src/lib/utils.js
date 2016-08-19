@@ -65,7 +65,7 @@ utils.runSeries = function (list, thisArg, cb) {
     }
 
     if (isPromise) {
-      r.then(ret => next()).catch(callback);
+      r.then(_ => next()).catch(callback);
     } else if (isSync) {
       process.nextTick(next);
     }
@@ -75,7 +75,7 @@ utils.runSeries = function (list, thisArg, cb) {
 };
 
 utils.wrapFn = function (fn, self = null) {
-  return function (done) {
+  return function (_) {
     const args = arguments;
     const callback = args[args.length - 1];
     try {
@@ -90,7 +90,7 @@ utils.wrapFn = function (fn, self = null) {
 };
 
 utils.getCallerSourceLine = function () {
-  const dir = __dirname + '/';
+  const dir = `${ __dirname }/`;
   const stack = (new Error()).stack.split('\n').slice(1);
   for (let line of stack) {
     line = line.trim();
