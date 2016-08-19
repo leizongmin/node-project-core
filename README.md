@@ -40,11 +40,6 @@ const ProjectCore = require('project-core');
 // create new instance
 const $ = global.$ = new ProjectCore();
 
-// namespace, you can store data in memory
-$.data.set('abc.e.f', 123);
-console.log($.data.get('abc'));
-// => {e: {f: 123}}
-
 // util functions, extends from lei-utils
 console.log($.utils.md5('haha'));
 // add your own function
@@ -53,11 +48,11 @@ $.utils.say = function () {};
 // extends
 $.extends({
   // before: optional, will be called before initializing plugins
-  before: function (next) {},
+  before(next) {},
   // init: initialize plugin
-  init: function (next) {},
+  init(next) {},
   // after: optional, will be called after plugins initialized
-  after: function (next) {},
+  after(next) {},
 });
 
 // init queue
@@ -124,6 +119,30 @@ $.event.once('ready', function () {
 // exports
 module.exports = $;
 ```
+
+or:
+
+```javascript
+'use strict';
+
+const ProjectCore = require('project-core');
+
+class MyProject extends ProjectCore {
+
+  constructor() {
+    super();
+    // do something
+  }
+
+  init(callback) {
+    // do something before init...
+    // and then call super.init()
+    super.init(callback);
+  }
+
+}
+```
+
 
 
 ## License
