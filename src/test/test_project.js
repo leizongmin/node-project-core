@@ -22,9 +22,9 @@ describe('ProjectCore', function () {
     assert.equal(project.data.has('a'), true);
     assert.equal(project.data.has('b'), true);
     assert.equal(project.data.has('a.a'), true);
-    assert.deepEqual(project.data.get('a'), {a: 123, b: 456});
+    assert.deepEqual(project.data.get('a'), { a: 123, b: 456 });
     assert.deepEqual(project.data.get('b'), 'abc');
-    assert.deepEqual(project.data.all(), {a: {a: 123, b: 456}, b: 'abc'});
+    assert.deepEqual(project.data.all(), { a: { a: 123, b: 456 }, b: 'abc' });
 
     done();
 
@@ -70,17 +70,17 @@ describe('ProjectCore', function () {
 
     const status = {};
     project.extends({
-      before: function (next) {
+      before(next) {
         assert.equal(project, this);
         status.a = true;
         next();
       },
-      init: function (next) {
+      init(next) {
         assert.equal(project, this);
         status.b = true;
         next();
       },
-      after: function (next) {
+      after(next) {
         assert.equal(project, this);
         status.c = true;
         next();
@@ -117,7 +117,7 @@ describe('ProjectCore', function () {
       }, /inited/);
 
       assert.throws(function () {
-        project.extends({init: function (next) { next(); }});
+        project.extends({ init(next) { next(); } });
       }, /inited/);
 
       done();
@@ -246,24 +246,24 @@ describe('ProjectCore', function () {
 
     const status = {};
     project.extends({
-      before: function (next) {
+      before(next) {
         assert.equal(project, this);
         status.a = true;
         next();
       },
-      init: function (next) {
+      init(next) {
         assert.equal(project, this);
         status.b = true;
         next(new Error('just for test'));
       },
-      after: function (next) {
+      after(next) {
         assert.equal(project, this);
         status.c = true;
         next();
       },
     });
 
-     project.init.add(function (next) {
+    project.init.add(function (next) {
       assert.equal(project, this);
       status.d = true;
       next();
@@ -323,8 +323,8 @@ describe('extends ProjectCore', function () {
     const project = new ProjectCore();
 
     project.extends({
-      init: function (next) {
-        this.hello = msg => `hello, ${msg}`;
+      init(next) {
+        this.hello = msg => `hello, ${ msg }`;
         next();
       },
     });
@@ -348,7 +348,7 @@ describe('ProjectCore.method', function () {
     project.init.add(done => {
       project.method('hello')
       .register(function (params, callback) {
-        callback(null, `hello, ${params}`);
+        callback(null, `hello, ${ params }`);
       })
       .catch(function (err, params, result) {
         console.log(err);
@@ -374,7 +374,7 @@ describe('ProjectCore.method', function () {
 
     project.init.add(done => {
       project.method('hello').register(function (params, callback) {
-        callback(null, `hello, ${params}`);
+        callback(null, `hello, ${ params }`);
       });
       done();
     });

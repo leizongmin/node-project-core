@@ -238,7 +238,7 @@ export class Method {
       };
 
       if (this._fn === null) {
-        return callback(new TypeError(`please register a handler for method ${this.name}`));
+        return callback(new TypeError(`please register a handler for method ${ this.name }`));
       } else {
         return next(null, params);
       }

@@ -7,7 +7,7 @@
 import assert from 'assert';
 import mocha from 'mocha';
 import async from 'async';
-import {Method, MethodManager} from '../lib/method';
+import { Method, MethodManager } from '../lib/method';
 import utils from '../lib/utils';
 
 
@@ -40,13 +40,13 @@ describe('Method', function () {
 
     method.register(function (params, callback) {
       status.register = true;
-      assert.deepEqual(params, {a: 123, b: 456});
-      callback(null, {a: 456, b: 123});
+      assert.deepEqual(params, { a: 123, b: 456 });
+      callback(null, { a: 456, b: 123 });
     });
 
-    method.call({a: 123, b: 456}, (err, ret) => {
+    method.call({ a: 123, b: 456 }, (err, ret) => {
       assert.equal(err, null);
-      assert.deepEqual(ret, {a: 456, b: 123});
+      assert.deepEqual(ret, { a: 456, b: 123 });
 
       assert.equal(status.register, true);
       done();
@@ -59,7 +59,7 @@ describe('Method', function () {
     const method = new Method();
     const status = {};
 
-    method.call({a: 123, b: 456}, (err, ret) => {
+    method.call({ a: 123, b: 456 }, (err, ret) => {
       assert.ok(err instanceof Error);
       done();
     });
@@ -83,7 +83,7 @@ describe('Method', function () {
       callback(null, params);
     });
 
-    method.call({a: '123', b: '456'}, (err, ret) => {
+    method.call({ a: '123', b: '456' }, (err, ret) => {
       assert.equal(err, null);
       assert.deepEqual(ret, 123 + 456);
 
@@ -109,7 +109,7 @@ describe('Method', function () {
       callback(null, result + 1000);
     });
 
-    method.call({a: 123, b: 456}, (err, ret) => {
+    method.call({ a: 123, b: 456 }, (err, ret) => {
       assert.equal(err, null);
       assert.deepEqual(ret, 123 + 456 + 1000);
 
@@ -154,7 +154,7 @@ describe('Method', function () {
       callback(null, result + 10000);
     });
 
-    method.call({a: '123', b: '456'}, (err, ret) => {
+    method.call({ a: '123', b: '456' }, (err, ret) => {
       assert.equal(err, null);
       assert.deepEqual(ret, 1123 + 1456 + 1000 + 10000);
 
@@ -175,11 +175,11 @@ describe('Method', function () {
 
     method.register(function (params, callback) {
       status.register = true;
-      assert.deepEqual(params, {a: 123, b: 456});
+      assert.deepEqual(params, { a: 123, b: 456 });
       callback(new Error('just for test'));
     });
 
-    method.call({a: 123, b: 456}, (err, ret) => {
+    method.call({ a: 123, b: 456 }, (err, ret) => {
       assert.equal(err.message, 'just for test');
       assert.equal(status.register, true);
 
@@ -195,14 +195,14 @@ describe('Method', function () {
 
     method.register(function (params, callback) {
       status.register = true;
-      assert.deepEqual(params, {a: 123, b: 456});
-      callback(null, {a: 456, b: 123});
+      assert.deepEqual(params, { a: 123, b: 456 });
+      callback(null, { a: 456, b: 123 });
     });
 
     try {
 
-      const ret = await method.call({a: 123, b: 456});
-      assert.deepEqual(ret, {a: 456, b: 123});
+      const ret = await method.call({ a: 123, b: 456 });
+      assert.deepEqual(ret, { a: 456, b: 123 });
 
     } catch (err) {
       throw err;
@@ -220,13 +220,13 @@ describe('Method', function () {
 
     method.register(function (params, callback) {
       status.register = true;
-      assert.deepEqual(params, {a: 123, b: 456});
+      assert.deepEqual(params, { a: 123, b: 456 });
       callback(new Error('just for test'));
     });
 
     try {
 
-      const ret = await method.call({a: 123, b: 456});
+      const ret = await method.call({ a: 123, b: 456 });
       throw new Error('should throw error');
 
     } catch (err) {
@@ -244,7 +244,7 @@ describe('Method', function () {
   it('catch normal error', function (done) {
 
     const method = new Method();
-    const status = {before: false, after: false, catch: false, catchAssert: null};
+    const status = { before: false, after: false, catch: false, catchAssert: null };
 
     method.register(function (params, callback) {
       throw new Error('just for test');
@@ -296,7 +296,7 @@ describe('Method', function () {
   it('catch async function error', function (done) {
 
     const method = new Method();
-    const status = {before: false, after: false, catch: false, catchAssert: null};
+    const status = { before: false, after: false, catch: false, catchAssert: null };
 
     method.register(async function (params) {
       throw new Error('just for test');
@@ -350,12 +350,12 @@ describe('Method', function () {
     const method = new Method();
 
     method.register(function (params, callback) {
-      callback(null, `${params.a}:${params.b}`);
+      callback(null, `${ params.a }:${ params.b }`);
     });
 
     method.check({
-      a: {required: true, validate: (v) => !isNaN(v)},
-      b: {validate: (v) => (typeof v === 'string' && v[0] === '$')},
+      a: { required: true, validate: (v) => !isNaN(v) },
+      b: { validate: (v) => (typeof v === 'string' && v[0] === '$') },
     });
 
     async.series([
@@ -375,7 +375,7 @@ describe('Method', function () {
       },
       function (next) {
 
-        method.call({a: 'a'}, function (err, ret) {
+        method.call({ a: 'a' }, function (err, ret) {
           if (err instanceof utils.InvalidParameterError) {
             if (err.name !== 'a') {
               return next(new Error('parameter name must be "a"'));
@@ -389,7 +389,7 @@ describe('Method', function () {
       },
       function (next) {
 
-        method.call({a: '123', b: 'bb'}, function (err, ret) {
+        method.call({ a: '123', b: 'bb' }, function (err, ret) {
           if (err instanceof utils.InvalidParameterError) {
             if (err.name !== 'b') {
               return next(new Error('parameter name must be "b"'));
@@ -403,7 +403,7 @@ describe('Method', function () {
       },
       function (next) {
 
-        method.call({a: '123', b: '$b'}, function (err, ret) {
+        method.call({ a: '123', b: '$b' }, function (err, ret) {
           assert.equal(err, null);
           assert.equal(ret, '123:$b');
           next();
@@ -412,7 +412,7 @@ describe('Method', function () {
       },
       function (next) {
 
-        method.call({a: '123'}, function (err, ret) {
+        method.call({ a: '123' }, function (err, ret) {
           assert.equal(err, null);
           assert.equal(ret, '123:undefined');
           next();
@@ -459,22 +459,22 @@ describe('MethodManager', function () {
     }
     try {
 
-      const ret1 = await manager.method('math.add').call([123, 456, 789]);
+      const ret1 = await manager.method('math.add').call([ 123, 456, 789 ]);
       assert.equal(ret1, 123 + 456 + 789);
 
-      const ret2 = await manager.method('math.times').call([123, 456, 789]);
+      const ret2 = await manager.method('math.times').call([ 123, 456, 789 ]);
       assert.equal(ret2, 123 * 456 * 789);
 
-      const ret3 = await manager.method('add').call([123, 456, 789]);
+      const ret3 = await manager.method('add').call([ 123, 456, 789 ]);
       assert.equal(ret3, 123 + 456 + 789);
 
-      const ret4 = await manager.method('math.add').call(['123', '456', '789']);
+      const ret4 = await manager.method('math.add').call([ '123', '456', '789' ]);
       assert.equal(ret4, 123 + 456 + 789);
 
-      const ret5 = await manager.method('math.times').call(['123', '456', '789']);
+      const ret5 = await manager.method('math.times').call([ '123', '456', '789' ]);
       assert.equal(ret5, 123 * 456 * 789);
 
-      const ret6 = await manager.method('add').call(['123', '456', '789']);
+      const ret6 = await manager.method('add').call([ '123', '456', '789' ]);
       assert.equal(ret6, '123456789');
 
     } catch (err) {
@@ -485,7 +485,7 @@ describe('MethodManager', function () {
 
     let ret7ok = false;
     try {
-      const ret7 = await manager.method('math.add').call([1, NaN]);
+      const ret7 = await manager.method('math.add').call([ 1, NaN ]);
       console.log(ret7);
     } catch (err) {
       ret7ok = true;
@@ -540,7 +540,7 @@ describe('MethodManager', function () {
       return result + 10000;
     });
 
-    method.call({a: '123', b: '456'}, (err, ret) => {
+    method.call({ a: '123', b: '456' }, (err, ret) => {
       assert.equal(err, null);
       assert.deepEqual(ret, 1123 + 1456 + 1000 + 10000);
 
@@ -561,11 +561,11 @@ describe('MethodManager', function () {
 
     method.register(async function (params) {
       status.register = true;
-      assert.deepEqual(params, {a: 123, b: 456});
+      assert.deepEqual(params, { a: 123, b: 456 });
       throw new Error('just for test');
     });
 
-    method.call({a: 123, b: 456}, (err, ret) => {
+    method.call({ a: 123, b: 456 }, (err, ret) => {
       assert.equal(err.message, 'just for test');
       assert.equal(status.register, true);
 
@@ -588,11 +588,11 @@ describe('MethodManager', function () {
     method.register(async function (params, callback) {
       await sleep(50);
       status.register = true;
-      assert.deepEqual(params, {a: 123, b: 456});
+      assert.deepEqual(params, { a: 123, b: 456 });
       callback(new Error('just for test'));
     });
 
-    method.call({a: 123, b: 456}, (err, ret) => {
+    method.call({ a: 123, b: 456 }, (err, ret) => {
       assert.equal(err.message, `please don't use callback in an async function`);
       assert.equal(status.register, true);
 
@@ -642,7 +642,7 @@ describe('MethodManager', function () {
       return result + 10000;
     });
 
-    method.call({a: '123', b: '456'}, (err, ret) => {
+    method.call({ a: '123', b: '456' }, (err, ret) => {
       assert.equal(err, null);
       assert.deepEqual(ret, 1123 + 1456 + 1000 + 10000);
 
@@ -663,11 +663,11 @@ describe('MethodManager', function () {
 
     method.register(function (params) {
       status.register = true;
-      assert.deepEqual(params, {a: 123, b: 456});
+      assert.deepEqual(params, { a: 123, b: 456 });
       throw new Error('just for test');
     });
 
-    method.call({a: 123, b: 456}, (err, ret) => {
+    method.call({ a: 123, b: 456 }, (err, ret) => {
       assert.equal(err.message, 'just for test');
       assert.equal(status.register, true);
 

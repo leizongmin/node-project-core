@@ -44,7 +44,7 @@ utils.runSeries = function (list, thisArg, cb) {
     if (err) return callback(err);
     if (isCallback) return callback(new Error('has been callback'));
 
-    let fn = list.shift();
+    const fn = list.shift();
     if (!fn) return callback(null);
 
     const isSync = fn.length < 1;
@@ -86,7 +86,7 @@ utils.wrapFn = function (fn, self = null) {
     } catch (err) {
       return callback(err);
     }
-  }
+  };
 };
 
 utils.getCallerSourceLine = function () {
@@ -113,14 +113,14 @@ utils.deref = function (v) {
   return v;
 };
 
-utils.MissingParameterError = utils.customError('missingParameterError', {code: 'missing_parameter', from: 'ProjectCore.method'});
+utils.MissingParameterError = utils.customError('missingParameterError', { code: 'missing_parameter', from: 'ProjectCore.method' });
 utils.missingParameterError = function (name) {
-  return new utils.MissingParameterError(`missing parameter "${name}"`, {name: name});
+  return new utils.MissingParameterError(`missing parameter "${ name }"`, { name });
 };
 
-utils.InvalidParameterError = utils.customError('invalidParameterError', {code: 'invalid_parameter', from: 'ProjectCore.method'});
+utils.InvalidParameterError = utils.customError('invalidParameterError', { code: 'invalid_parameter', from: 'ProjectCore.method' });
 utils.invalidParameterError = function (name) {
-  return new utils.InvalidParameterError(`invalid parameter "${name}"`, {name: name});
+  return new utils.InvalidParameterError(`invalid parameter "${ name }"`, { name });
 };
 
 export default utils;

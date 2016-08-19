@@ -8,9 +8,9 @@
 
 import path from 'path';
 import fs from 'fs';
-import {EventEmitter} from 'events';
-import {MethodManager} from './method';
-import {Namespace} from 'lei-ns';
+import { EventEmitter } from 'events';
+import { MethodManager } from './method';
+import { Namespace } from 'lei-ns';
 import rd from 'rd';
 import utils from './utils';
 const debug = utils.debug('core');
@@ -54,7 +54,7 @@ export default class ProjectCore {
       let ret;
       if (typeof m === 'function') ret = m;
       else if (typeof m.default === 'function') ret = m.default;
-      else throw new Error(`module "${f}" must export as a function`);
+      else throw new Error(`module "${ f }" must export as a function`);
       ret.level = m.level || ret.level || 0;
       return ret;
     };
@@ -67,15 +67,15 @@ export default class ProjectCore {
       } else if (s.isDirectory()) {
         const list = rd.readFileFilterSync(f, /\.js$/)
                        .map(f => {
-                          debug('init.load: %s', f);
-                          return this.init._loadFile(f);
+                         debug('init.load: %s', f);
+                         return this.init._loadFile(f);
                        })
                        .sort((a, b) => b.level - a.level);
         for (const fn of list) {
           this.init.add(fn);
         }
       } else {
-        throw new Error(`"${f}" is not a file or directory`);
+        throw new Error(`"${ f }" is not a file or directory`);
       }
     };
 
@@ -84,7 +84,7 @@ export default class ProjectCore {
       debug('config.load: %s', file);
       const initConfig = require(path.resolve(file));
       if (typeof initConfig !== 'function') {
-        throw new Error(`incorrect config file format in file "${file}"`);
+        throw new Error(`incorrect config file format in file "${ file }"`);
       }
       const args = [
         (n, v) => this.config.set(n, v),
@@ -98,7 +98,7 @@ export default class ProjectCore {
     this.config.get = (n) => {
       const v = this.config._get(n);
       if (v === undefined) {
-        throw new TypeError(`config field "${n}" is undefined`);
+        throw new TypeError(`config field "${ n }" is undefined`);
       }
       return v;
     };
@@ -142,17 +142,17 @@ export default class ProjectCore {
         },
         before(fn) {
           debug('method.before: %s', name);
-          self._methodHooks.push({name, fn, type: 'before'});
+          self._methodHooks.push({ name, fn, type: 'before' });
           return method;
         },
         after(fn) {
           debug('method.after: %s', name);
-          self._methodHooks.push({name, fn, type: 'after'});
+          self._methodHooks.push({ name, fn, type: 'after' });
           return method;
         },
         catch(fn) {
           debug('method.catch: %s', name);
-          self._methodHooks.push({name, fn, type: 'catch'});
+          self._methodHooks.push({ name, fn, type: 'catch' });
           return method;
         },
         call(params, callback) {
@@ -249,12 +249,12 @@ export default class ProjectCore {
   report(print = false) {
     const lines = [];
     for (const m of this._methodManager._method.values()) {
-      lines.push(`method ${m.name} at ${m._fn && m._fn.__sourceLine}`);
+      lines.push(`method ${ m.name } at ${ m._fn && m._fn.__sourceLine }`);
       for (const f of m._before) {
-        lines.push(` - before hook at ${f.__sourceLine}`);
+        lines.push(` - before hook at ${ f.__sourceLine }`);
       }
       for (const f of m._after) {
-        lines.push(` - after hook at ${f.__sourceLine}`);
+        lines.push(` - after hook at ${ f.__sourceLine }`);
       }
     }
     const str = lines.join('\n');
