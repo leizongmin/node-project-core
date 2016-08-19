@@ -4,13 +4,11 @@
   "description": "project core",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && npm run compile && mocha dist/test/*.js",
-    "test:dev": "mocha dist/test/*.js",
-    "t:method": "mocha dist/test/test_method.js",
-    "t:project": "mocha dist/test/test_project.js",
+    "test": "npm run lint && npm run compile && cp -rf src/test/config dist/test && mocha dist/test/*.js",
     "coverage": "npm run compile && istanbul cover _mocha -- dist/test/*.js",
-    "compile": "babel src -d dist --source-maps=inline",
-    "compile:w": "rm -Rf dist && babel src -d dist --watch --source-maps=inline",
+    "clean": "rm -rf dist",
+    "compile": "npm run clean && babel src -d dist --source-maps=true",
+    "watch": "npm run clean && babel src -d dist --watch --source-maps=true",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0",
     "prepublish": "npm run changelog && npm run test",
     "lint": "eslint src --fix && echo 'eslint passed'"
@@ -28,6 +26,7 @@
   "dependencies": {
     "debug": "2.2.0",
     "escape-string-regexp": "^1.0.5",
+    "js-yaml": "^3.6.1",
     "lei-ns": "^0.3.1",
     "lei-utils": "2.1.0",
     "rd": "0.0.2"

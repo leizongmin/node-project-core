@@ -4,6 +4,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
+import path from 'path';
 import assert from 'assert';
 import utils from 'lei-utils';
 import ProjectCore from '../lib/index';
@@ -292,6 +293,46 @@ describe('ProjectCore', function () {
       });
 
     });
+
+  });
+
+});
+
+describe('config', function () {
+
+  it('load *.js', function (done) {
+
+    const project = new ProjectCore();
+    project.config.load(path.resolve(__dirname, './config/test1.js'));
+    assert.deepEqual(project.config.get('a'), { a: 123, b: 456 });
+    done();
+
+  });
+
+  it('load (no extname)', function (done) {
+
+    const project = new ProjectCore();
+    project.config.load(path.resolve(__dirname, './config/test1'));
+    assert.deepEqual(project.config.all(), { a: { a: 123, b: 456 }});
+    done();
+
+  });
+
+  it('load *.json', function (done) {
+
+    const project = new ProjectCore();
+    project.config.load(path.resolve(__dirname, './config/test2.json'));
+    assert.deepEqual(project.config.all(), { abc: 12345, efg: [ '1', '2', '3' ]});
+    done();
+
+  });
+
+  it('load *.yaml', function (done) {
+
+    const project = new ProjectCore();
+    project.config.load(path.resolve(__dirname, './config/test3.yaml'));
+    assert.deepEqual(project.config.all(), { hello: [ 'world', 'lei' ], true: true, 123: 123 });
+    done();
 
   });
 

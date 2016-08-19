@@ -11,6 +11,7 @@ import fs from 'fs';
 import { EventEmitter } from 'events';
 import { Namespace } from 'lei-ns';
 import rd from 'rd';
+import yaml from 'js-yaml';
 import utils from './utils';
 const debug = utils.debug('core');
 
@@ -76,17 +77,29 @@ export default class ProjectCore {
     this.config = new Namespace();
     this.config.load = file => {
       debug('config.load: %s', file);
-      const initConfig = require(path.resolve(file));
-      if (typeof initConfig !== 'function') {
-        throw new Error(`incorrect config file format in file "${ file }"`);
+      try {
+        const fullPath = path.resolve(file);
+        const ext = path.extname(fullPath).toLowerCase();
+        if (ext === '.yaml') {
+          this.config.merge(yaml.safeLoad(fs.readFileSync(fullPath).toString()));
+        } else if (ext === '.json') {
+          this.config.merge(require(fullPath));
+        } else if (ext === '.js' || ext === '') {
+          const initConfig = require(fullPath);
+          if (typeof initConfig !== 'function') {
+            throw new Error(`incorrect config file format in file "${ file }"`);
+          }
+          const args = [
+            (n, v) => this.config.set(n, v),
+            (n) => this.config.get(n),
+            (n) => this.config.has(n),
+            this.config,
+          ];
+          initConfig.call(this.config, ...args);
+        }
+      } catch (err) {
+        throw new Error(`failed to load config file "${ file }": ${ err.message }`);
       }
-      const args = [
-        (n, v) => this.config.set(n, v),
-        (n) => this.config.get(n),
-        (n) => this.config.has(n),
-        this.config,
-      ];
-      initConfig.call(this.config, ...args);
     };
     this.config._get = this.config.get;
     this.config.get = (n) => {

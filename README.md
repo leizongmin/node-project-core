@@ -84,16 +84,54 @@ console.log($.config.has('web.port'));
 $.init();
 ```
 
-### Example config file
+
+### Configuration file
+
+#### JavasSript file
+
+exmaple file `dev.js`:
 
 ```javascript
 module.exports = function (set, get, has) {
 
   set('web.session.secret', '11111111');
-  // you can use the get(name) and has(name) to get specific config value
+  // use the get(name) and has(name) to get specific config value
+  // you can also use this.set(), this.get() and this.has()
+  // for exmaple: this.set('we.session.secret')
 
 };
 ```
+
+use `$.config.load('/path/to/dev.js')` or `$.config.load('/path/to/dev')` to load this config file.
+
+#### JSON file
+
+example file `dev.json`:
+
+```json
+{
+  "web": {
+    "session": {
+      "secret": "11111111"
+    }
+  }
+}
+```
+
+use `$.config.load('/path/to/dev.json')` to load this config file.
+
+#### YAML file
+
+example file `dev.yaml`:
+
+```yaml
+web:
+  session:
+    secret: '11111111'
+```
+
+use `$.config.load('/path/to/dev.yaml')` to load this config file.
+
 
 ### Extends and republish your own `project-core`
 
