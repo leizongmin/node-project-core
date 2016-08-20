@@ -122,7 +122,7 @@ use `$.config.load('/path/to/dev.json')` to load this config file.
 
 #### YAML file
 
-example file `dev.yaml`:
+example file `dev.yaml` (or `dev.yml`):
 
 ```yaml
 web:

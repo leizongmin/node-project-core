@@ -80,7 +80,7 @@ export default class ProjectCore {
       try {
         const fullPath = path.resolve(file);
         const ext = path.extname(fullPath).toLowerCase();
-        if (ext === '.yaml') {
+        if (ext === '.yaml' || ext === '.yml') {
           this.config.merge(yaml.safeLoad(fs.readFileSync(fullPath).toString()));
         } else if (ext === '.json') {
           this.config.merge(require(fullPath));

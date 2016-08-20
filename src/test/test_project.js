@@ -336,6 +336,15 @@ describe('config', function () {
 
   });
 
+  it('load *.yml', function (done) {
+
+    const project = new ProjectCore();
+    project.config.load(path.resolve(__dirname, './config/test3.yml'));
+    assert.deepEqual(project.config.all(), { hello: [ 'world', 'lei' ], true: true, 123: 123 });
+    done();
+
+  });
+
 });
 
 describe('extends ProjectCore', function () {
