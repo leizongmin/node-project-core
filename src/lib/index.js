@@ -116,10 +116,6 @@ export default class ProjectCore {
       after: [],
     };
 
-    this._lazycallMethods = new Map();
-    this._methodHooks = [];
-    this.event.once('ready', () => this._lazycallMethods.clear());
-
     this.inited = false;
     this.event.once('ready', () => {
       this.inited = true;
