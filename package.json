@@ -1,6 +1,6 @@
 {
   "name": "project-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "project core",
   "main": "index.js",
   "scripts": {
@@ -32,9 +32,9 @@
     "rd": "0.0.2"
   },
   "devDependencies": {
-    "async": "^2.0.0",
-    "babel-cli": "^6.5.0",
-    "babel-core": "^6.5.0",
+    "async": "^2.0.1",
+    "babel-cli": "^6.11.4",
+    "babel-core": "^6.13.2",
     "babel-eslint": "^6.1.2",
     "babel-preset-es2015-node4": "^2.1.0",
     "babel-preset-stage-3": "^6.5.0",
