@@ -35,7 +35,7 @@ utils.runSeries = function (list, thisArg, cb) {
     } else {
       isCallback = true;
       debug('runSeries: callback, err=%s', err);
-      process.nextTick(() => cb(err));
+      process.nextTick(() => cb.call(thisArg, err));
     }
   };
 
