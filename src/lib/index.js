@@ -151,22 +151,28 @@ export default class ProjectCore {
     this._checkInited();
     debug('initing');
 
+    const cb = err => {
+      if (callback) {
+        callback.call(this, err);
+      }
+    };
+
     this._extends = this._extends.before.concat(this._extends.init, this._extends.after);
     utils.runSeries(this._extends, this, err => {
       if (err) {
         this.event.emit('error', err);
-        return callback && callback(err);
+        return cb(err);
       }
 
       utils.runSeries(this.init._queue, this, err => {
         if (err) {
           this.event.emit('error', err);
-          return callback && callback(err);
+          return cb(err);
         }
 
         this.initing = false;
         this.event.emit('ready');
-        callback && callback(null);
+        cb(null);
       });
     });
 
