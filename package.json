@@ -40,7 +40,7 @@
     "babel-preset-stage-3": "^6.5.0",
     "conventional-changelog-cli": "^1.2.0",
     "eslint": "^3.3.1",
-    "eslint-config-lei": "0.0.6",
+    "eslint-config-lei": "0.0.7",
     "istanbul": "^0.4.2",
     "mocha": "^3.0.2"
   }
