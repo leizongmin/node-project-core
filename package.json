@@ -4,7 +4,7 @@
   "description": "project core",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && npm run compile && cp -rf src/test/config dist/test && mocha dist/test/*.js",
+    "test": "npm run lint && npm run compile && cp -rf src/test/config dist/test && mocha --require source-map-support/register dist/test/*.js",
     "coverage": "npm run compile && istanbul cover _mocha -- dist/test/*.js",
     "clean": "rm -rf dist",
     "compile": "npm run clean && babel src -d dist --source-maps=true",
@@ -42,6 +42,7 @@
     "eslint": "^3.3.1",
     "eslint-config-lei": "0.0.6",
     "istanbul": "^0.4.2",
-    "mocha": "^3.0.2"
+    "mocha": "^3.0.2",
+    "source-map-support": "^0.4.2"
   }
 }
