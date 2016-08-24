@@ -190,4 +190,42 @@ export default class ProjectCore {
     }
   }
 
+  run(tasks, callback) {
+    const cb = err => {
+      if (typeof callback === 'function') {
+        callback(err);
+      } else if (err) {
+        this.emit('error', err);
+      }
+    };
+    const runTasks = list => {
+      for (const fn of list) {
+        fn.__sourceLine = utils.getCallerSourceLine();
+      }
+      utils.runSeries(list, this, cb);
+    };
+    if (typeof tasks === 'function') {
+      runTasks([ tasks ]);
+    } else {
+      const f = path.resolve(tasks);
+      fs.stat(f, (err, s) => {
+        if (err) return cb(err);
+        if (s.isFile()) {
+          debug('run: %s', f);
+          runTasks([ this.init._loadFile(f) ]);
+        } else if (s.isDirectory()) {
+          const list = rd.readFileFilterSync(f, /\.js$/)
+                        .map(f => {
+                          debug('run: %s', f);
+                          return this.init._loadFile(f);
+                        })
+                        .sort((a, b) => b.level - a.level);
+          runTasks(list);
+        } else {
+          throw new Error(`"${ f }" is not a file or directory`);
+        }
+      });
+    }
+  }
+
 }

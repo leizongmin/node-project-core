@@ -296,6 +296,68 @@ describe('ProjectCore', function () {
 
   });
 
+  it('project.run', function (done) {
+
+    const project = new ProjectCore();
+
+    const status = { count: 0 };
+
+    async function sleep(ms) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    project.run(async function () {
+      await sleep(10);
+      status.a = true;
+    }, err => {
+      assert.equal(err, null);
+      assert.equal(status.a, true);
+      checkDone();
+    });
+
+    project.run(async function () {
+      await sleep(10);
+      status.b = true;
+    }, err => {
+      assert.equal(err, null);
+      assert.equal(status.b, true);
+      checkDone();
+    });
+
+    project.run(async function () {
+      await sleep(10);
+      status.c = true;
+    }, err => {
+      assert.equal(err, null);
+      assert.equal(status.c, true);
+      checkDone();
+    });
+
+    project.run(path.resolve(__dirname, './tasks/a.js'), err => {
+      assert.equal(err, null);
+      assert.equal(project.$$a, true);
+      checkDone();
+    });
+
+    project.run(path.resolve(__dirname, './tasks'), err => {
+      assert.equal(err, null);
+      assert.equal(project.$$a, true);
+      assert.equal(project.$$b, true);
+      assert.equal(project.$$c, true);
+      checkDone();
+    });
+
+    function checkDone() {
+      status.count += 1;
+      if (status.count >= 5) {
+        done();
+      }
+    }
+
+  });
+
 });
 
 describe('config', function () {
