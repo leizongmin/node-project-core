@@ -38,6 +38,7 @@ export default class ProjectCore {
 
     this.init._queue = [];
     this.init.add = (fn) => {
+      this._checkIniting();
       this._checkInited();
       // eslint-disable-next-line
       fn.__sourceLine = utils.getCallerSourceLine();
@@ -54,7 +55,8 @@ export default class ProjectCore {
       return ret;
     };
     this.init.load = (f) => {
-      if (this.initing) throw new Error('cannot call init.load() after init()');
+      this._checkIniting();
+      this._checkInited();
       const s = fs.statSync(f);
       if (s.isFile()) {
         debug('init.load: %s', f);
@@ -126,6 +128,12 @@ export default class ProjectCore {
   _checkInited() {
     if (this.inited) {
       throw new Error('you cannot change project-core after it has been inited');
+    }
+  }
+
+  _checkIniting() {
+    if (this.initing) {
+      throw new Error('you cannot change project-core while it is initing');
     }
   }
 
