@@ -36,41 +36,17 @@ export default class ProjectCore {
     });
 
     this.init._queue = [];
-    this.init._loadFile = (f) => {
-      const m = require(f);
-      let ret;
-      if (typeof m === 'function') ret = m;
-      else if (typeof m.default === 'function') ret = m.default;
-      else throw new Error(`module "${ f }" must export as a function`);
-      ret.level = m.level || ret.level || 0;
-      return ret;
-    };
     this.init.add = (fn) => {
       this._checkIniting();
       this._checkInited();
-      fn.__sourceLine = utils.getCallerSourceLine();
-      debug('init.add: at %s', fn.__sourceLine);
-      this.init._queue.push(fn);
+      this.init._queue.push(this._wrapTask(fn));
     };
     this.init.load = (f) => {
       this._checkIniting();
       this._checkInited();
-      const s = fs.statSync(f);
-      if (s.isFile()) {
-        debug('init.load: %s', f);
-        this.init.add(this.init._loadFile(f));
-      } else if (s.isDirectory()) {
-        const list = rd.readFileFilterSync(f, /\.js$/)
-                       .map(f => {
-                         debug('init.load: %s', f);
-                         return this.init._loadFile(f);
-                       })
-                       .sort((a, b) => b.level - a.level);
-        for (const fn of list) {
-          this.init.add(fn);
-        }
-      } else {
-        throw new Error(`"${ f }" is not a file or directory`);
+      const list = this._loadFileOrDirectory(f);
+      for (const fn of list) {
+        this.init.add(fn);
       }
     };
 
@@ -120,6 +96,39 @@ export default class ProjectCore {
     this.event.once('ready', () => {
       this.inited = true;
     });
+  }
+
+  _wrapTask(fn) {
+    fn.__sourceLine = utils.getCallerSourceLine();
+    debug('wrap: at %s', fn.__sourceLine);
+    return fn;
+  }
+
+  _loadFile(f) {
+    const m = require(f);
+    let ret;
+    if (typeof m === 'function') ret = m;
+    else if (typeof m.default === 'function') ret = m.default;
+    else throw new Error(`module "${ f }" must export as a function`);
+    ret.level = m.level || ret.level || 0;
+    return this._wrapTask(ret);
+  }
+
+  _loadFileOrDirectory(f) {
+    const s = fs.statSync(f);
+    if (s.isFile()) {
+      debug('load: %s', f);
+      return [ this._loadFile(f) ];
+    } else if (s.isDirectory()) {
+      return rd
+              .readFileFilterSync(f, /\.js$/)
+              .map(f => {
+                debug('load: %s', f);
+                return this._loadFile(f);
+              })
+              .sort((a, b) => b.level - a.level);
+    }
+    throw new Error(`"${ f }" is not a file or directory`);
   }
 
   _checkInited() {
@@ -202,32 +211,12 @@ export default class ProjectCore {
       }
     };
     const runTasks = list => {
-      for (const fn of list) {
-        fn.__sourceLine = utils.getCallerSourceLine();
-      }
       utils.runSeries(list, this, params, cb);
     };
     if (typeof tasks === 'function') {
       runTasks([ tasks ]);
     } else {
-      const f = path.resolve(tasks);
-      fs.stat(f, (err, s) => {
-        if (err) return cb(err);
-        if (s.isFile()) {
-          debug('run: %s', f);
-          runTasks([ this.init._loadFile(f) ]);
-        } else if (s.isDirectory()) {
-          const list = rd.readFileFilterSync(f, /\.js$/)
-                        .map(f => {
-                          debug('run: %s', f);
-                          return this.init._loadFile(f);
-                        })
-                        .sort((a, b) => b.level - a.level);
-          runTasks(list);
-        } else {
-          throw new Error(`"${ f }" is not a file or directory`);
-        }
-      });
+      runTasks(this._loadFileOrDirectory(tasks));
     }
   }
 
