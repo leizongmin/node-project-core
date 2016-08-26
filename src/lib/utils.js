@@ -28,6 +28,14 @@ utils.extends = function () {
 
 utils.runSeries = function (list, thisArg, cb) {
 
+  let params = [];
+  if (arguments.length === 4) {
+    // eslint-disable-next-line
+    params = arguments[2];
+    // eslint-disable-next-line
+    cb = arguments[3];
+  }
+
   let isCallback = false;
   const callback = err => {
     if (isCallback) {
@@ -35,7 +43,7 @@ utils.runSeries = function (list, thisArg, cb) {
     } else {
       isCallback = true;
       debug('runSeries: callback, err=%s', err);
-      process.nextTick(() => cb.call(thisArg, err));
+      process.nextTick(() => cb.call(thisArg, err, ...params));
     }
   };
 
@@ -47,14 +55,14 @@ utils.runSeries = function (list, thisArg, cb) {
     const fn = list.shift();
     if (!fn) return callback(null);
 
-    const isSync = fn.length < 1;
+    const isSync = fn.length <= params.length;
     let isPromise = false;
     let r = null;
 
     try {
 
       if (fn.__sourceLine) debug('runSeries: at %s', fn.__sourceLine);
-      r = fn.call(thisArg, (err) => {
+      r = fn.call(thisArg, ...params, (err) => {
         if (isPromise) return callback(new Error(`please don't use callback in an async function`));
         next(err);
       });

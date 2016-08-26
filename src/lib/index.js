@@ -198,7 +198,8 @@ export default class ProjectCore {
     }
   }
 
-  run(tasks, callback) {
+  run(tasks, ...params) {
+    const callback = params.pop();
     const cb = err => {
       if (typeof callback === 'function') {
         callback(err);
@@ -210,7 +211,7 @@ export default class ProjectCore {
       for (const fn of list) {
         fn.__sourceLine = utils.getCallerSourceLine();
       }
-      utils.runSeries(list, this, cb);
+      utils.runSeries(list, this, params, cb);
     };
     if (typeof tasks === 'function') {
       runTasks([ tasks ]);
