@@ -36,14 +36,6 @@ export default class ProjectCore {
     });
 
     this.init._queue = [];
-    this.init.add = (fn) => {
-      this._checkIniting();
-      this._checkInited();
-      // eslint-disable-next-line
-      fn.__sourceLine = utils.getCallerSourceLine();
-      debug('init.add: at %s', fn.__sourceLine);
-      this.init._queue.push(fn);
-    };
     this.init._loadFile = (f) => {
       const m = require(f);
       let ret;
@@ -52,6 +44,13 @@ export default class ProjectCore {
       else throw new Error(`module "${ f }" must export as a function`);
       ret.level = m.level || ret.level || 0;
       return ret;
+    };
+    this.init.add = (fn) => {
+      this._checkIniting();
+      this._checkInited();
+      fn.__sourceLine = utils.getCallerSourceLine();
+      debug('init.add: at %s', fn.__sourceLine);
+      this.init._queue.push(fn);
     };
     this.init.load = (f) => {
       this._checkIniting();
