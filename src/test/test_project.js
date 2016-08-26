@@ -46,7 +46,7 @@ describe('ProjectCore', function () {
 
   });
 
-  it('project.extends & project.init', function (done) {
+  it('project.extends() & project.init()', function (done) {
 
     const project = new ProjectCore();
 
@@ -107,7 +107,7 @@ describe('ProjectCore', function () {
 
   });
 
-  it('project.init #async function', function (done) {
+  it('project.init() #async function', function (done) {
 
     const project = new ProjectCore();
 
@@ -141,7 +141,7 @@ describe('ProjectCore', function () {
 
   });
 
-  it('project.init #sync function', function (done) {
+  it('project.init() #sync function', function (done) {
 
     const project = new ProjectCore();
 
@@ -177,7 +177,7 @@ describe('ProjectCore', function () {
 
   });
 
-  it('project.init #async function - do not use callback', function (done) {
+  it('project.init() #async function - do not use callback', function (done) {
 
     const project = new ProjectCore();
 
@@ -222,7 +222,7 @@ describe('ProjectCore', function () {
 
   });
 
-  it('project.extends & project.init #error', function (done) {
+  it('project.extends() & project.init() #error', function (done) {
 
     const project = new ProjectCore();
 
@@ -271,7 +271,7 @@ describe('ProjectCore', function () {
 
   });
 
-  it('project.ready', function (done) {
+  it('project.ready()', function (done) {
 
     const project = new ProjectCore();
 
@@ -292,6 +292,50 @@ describe('ProjectCore', function () {
         });
       });
 
+    });
+
+  });
+
+  it('project.init(...params, callback)', function (done) {
+
+    const project = new ProjectCore();
+
+    const status = { count: 0 };
+
+    async function sleep(ms) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    project.init.add(async function (status) {
+      await sleep(10);
+      status.a = true;
+    });
+
+    project.init.add(async function (status) {
+      await sleep(10);
+      status.b = true;
+    });
+
+    project.init.add(async function (status) {
+      await sleep(10);
+      status.c = true;
+    });
+
+    project.init.load(path.resolve(__dirname, './tasks2/a.js'));
+
+    project.init.load(path.resolve(__dirname, './tasks2'));
+
+    project.init(status, function (err) {
+      assert.equal(err, null);
+      assert.equal(status.a, true);
+      assert.equal(status.b, true);
+      assert.equal(status.c, true);
+      assert.equal(this.$$a, true);
+      assert.equal(this.$$b, true);
+      assert.equal(this.$$c, true);
+      done();
     });
 
   });
