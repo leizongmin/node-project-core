@@ -1,6 +1,6 @@
 {
   "name": "project-core",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "project core",
   "main": "index.js",
   "files": [
