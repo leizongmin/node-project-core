@@ -18,7 +18,6 @@ const debug = utils.debug('core');
 export default class ProjectCore {
 
   constructor() {
-
     this.utils = utils.extends();
 
     this._event = new EventEmitter();
@@ -122,7 +121,6 @@ export default class ProjectCore {
     this.event.once('ready', () => {
       this.inited = true;
     });
-
   }
 
   _checkInited() {
@@ -138,7 +136,6 @@ export default class ProjectCore {
   }
 
   extends(info) {
-
     this._checkInited();
 
     if (typeof info.before === 'function') {
@@ -150,11 +147,9 @@ export default class ProjectCore {
     if (typeof info.after === 'function') {
       this._extends.after.push(info.after);
     }
-
   }
 
   init(callback) {
-
     this.initing = true;
     this._checkInited();
     debug('initing');
@@ -183,7 +178,6 @@ export default class ProjectCore {
         cb(null);
       });
     });
-
   }
 
   ready(callback) {

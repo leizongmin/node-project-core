@@ -27,7 +27,6 @@ utils.extends = function () {
 };
 
 utils.runSeries = function (list, thisArg, cb) {
-
   let params = [];
   if (arguments.length === 4) {
     // eslint-disable-next-line
@@ -48,7 +47,6 @@ utils.runSeries = function (list, thisArg, cb) {
   };
 
   const next = err => {
-
     if (err) return callback(err);
     if (isCallback) return callback(new Error('has been callback'));
 
@@ -77,7 +75,6 @@ utils.runSeries = function (list, thisArg, cb) {
     } else if (isSync) {
       process.nextTick(next);
     }
-
   };
   next(null);
 };
