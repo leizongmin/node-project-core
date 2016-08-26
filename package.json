@@ -25,7 +25,6 @@
   "homepage": "https://github.com/leizongmin/node-project-core#readme",
   "dependencies": {
     "debug": "2.2.0",
-    "escape-string-regexp": "^1.0.5",
     "js-yaml": "^3.6.1",
     "lei-ns": "^0.3.1",
     "lei-utils": "^2.2.0",
@@ -33,15 +32,15 @@
   },
   "devDependencies": {
     "async": "^2.0.1",
-    "babel-cli": "^6.11.4",
-    "babel-core": "^6.13.2",
+    "babel-cli": "^6.14.0",
+    "babel-core": "^6.14.0",
     "babel-eslint": "^6.1.2",
     "babel-preset-es2015-node4": "^2.1.0",
     "babel-preset-stage-3": "^6.5.0",
     "conventional-changelog-cli": "^1.2.0",
     "eslint": "^3.3.1",
     "eslint-config-lei": "0.0.7",
-    "istanbul": "^0.4.2",
+    "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
     "source-map-support": "^0.4.2"
   }
