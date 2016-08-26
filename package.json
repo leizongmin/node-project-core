@@ -3,6 +3,9 @@
   "version": "1.2.0",
   "description": "project core",
   "main": "index.js",
+  "files": [
+    "dist/lib"
+  ],
   "scripts": {
     "test": "npm run lint && npm run compile && cp -rf src/test/config dist/test && mocha --require source-map-support/register dist/test/*.js",
     "coverage": "npm run compile && istanbul cover _mocha -- dist/test/*.js",
