@@ -33,7 +33,7 @@
     "rd": "0.0.2"
   },
   "devDependencies": {
-    "async": "^2.0.1",
+    "async": "^2.1.2",
     "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
     "babel-eslint": "^6.1.2",
