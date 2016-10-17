@@ -29,7 +29,7 @@
     "debug": "2.2.0",
     "js-yaml": "^3.6.1",
     "lei-ns": "^0.3.1",
-    "lei-utils": "^2.2.0",
+    "lei-utils": "^3.0.0",
     "rd": "0.0.2"
   },
   "devDependencies": {
