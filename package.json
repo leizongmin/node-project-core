@@ -40,7 +40,7 @@
     "babel-preset-es2015-node4": "^2.1.0",
     "babel-preset-stage-3": "^6.5.0",
     "eslint": "^3.8.0",
-    "eslint-config-lei": "0.0.7",
+    "eslint-config-lei": "0.0.8",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
     "source-map-support": "^0.4.4"
