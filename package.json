@@ -43,6 +43,6 @@
     "eslint-config-lei": "0.0.10",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
-    "source-map-support": "^0.4.4"
+    "source-map-support": "^0.4.5"
   }
 }
