@@ -4,7 +4,7 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-module.exports = exports = require('./dist/lib/index').default;
+module.exports = exports = require('./lib/index');
 exports.ProjectCore = module.exports;
 
-exports.utils = require('./dist/lib/utils').default;
+exports.utils = require('./lib/utils');
