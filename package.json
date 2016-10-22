@@ -4,16 +4,14 @@
   "description": "project core",
   "main": "index.js",
   "files": [
-    "dist/lib"
+    "lib"
   ],
   "scripts": {
-    "test": "npm run lint && npm run compile && cp -rf src/test/config dist/test && mocha --require source-map-support/register dist/test/*.js",
-    "coverage": "npm run compile && istanbul cover _mocha -- dist/test/*.js",
+    "test": "npm run lint && mocha -t 5000",
+    "coverage": "istanbul cover _mocha -- dist/test/*.js",
     "clean": "rm -rf dist",
-    "compile": "npm run clean && babel src -d dist --source-maps=true",
-    "watch": "npm run clean && babel src -d dist --watch --source-maps=true",
     "prepublish": "npm run test",
-    "lint": "eslint src --fix && echo 'eslint passed'"
+    "lint": "eslint lib test --fix && echo 'eslint passed'"
   },
   "repository": {
     "type": "git",
@@ -34,15 +32,11 @@
   },
   "devDependencies": {
     "async": "^2.1.2",
-    "babel-cli": "^6.14.0",
-    "babel-core": "^6.14.0",
-    "babel-eslint": "^7.0.0",
-    "babel-preset-es2015-node4": "^2.1.0",
-    "babel-preset-stage-3": "^6.5.0",
     "eslint": "^3.8.1",
-    "eslint-config-lei": "0.0.10",
+    "eslint-config-lei": "^0.0.10",
+    "eslint-plugin-promise": "^3.3.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.0.2",
-    "source-map-support": "^0.4.5"
+    "lei-coroutine": "^1.2.0",
+    "mocha": "^3.0.2"
   }
 }

@@ -4,10 +4,11 @@
  * @author Zongmin Lei <leizongmin@gmail.com>
  */
 
-import path from 'path';
-import assert from 'assert';
-import utils from 'lei-utils';
-import ProjectCore from '../lib/index';
+const path = require('path');
+const assert = require('assert');
+const utils = require('lei-utils');
+const coroutine = require('lei-coroutine');
+const ProjectCore = require('../lib/index');
 
 
 describe('ProjectCore', function () {
@@ -113,17 +114,20 @@ describe('ProjectCore', function () {
 
     const status = {};
 
-    project.init.add(async function () {
+    project.init.add(coroutine.wrap(function* () {
+      yield coroutine.delay(10);
       status.a = true;
-    });
+    }));
 
-    project.init.add(async function () {
+    project.init.add(coroutine.wrap(function* () {
+      yield coroutine.delay(10);
       status.b = true;
-    });
+    }));
 
-    project.init.add(async function () {
+    project.init.add(coroutine.wrap(function* () {
+      yield coroutine.delay(10);
       status.c = true;
-    });
+    }));
 
     project.init.add(function (next) {
       status.d = true;
@@ -183,36 +187,30 @@ describe('ProjectCore', function () {
 
     const status = {};
 
-    async function sleep(ms) {
-      return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-      });
-    }
-
-    project.init.add(async function () {
-      await sleep(10);
+    project.init.add(coroutine.wrap(function* () {
+      yield coroutine.delay(10);
       status.a = true;
-    });
+    }));
 
-    project.init.add(async function () {
-      await sleep(10);
+    project.init.add(coroutine.wrap(function* () {
+      yield coroutine.delay(10);
       status.b = true;
-    });
+    }));
 
-    project.init.add(async function (next) {
-      await sleep(10);
+    project.init.add(coroutine.wrap(function* (next) {
+      yield coroutine.delay(10);
       status.c = true;
       next();
-    });
+    }));
 
-    project.init.add(async function () {
-      await sleep(10);
+    project.init.add(coroutine.wrap(function* () {
+      yield coroutine.delay(10);
       status.d = true;
-    });
+    }));
 
     project.init(function (err) {
       assert.notEqual(err, null);
-      assert.equal(err.message, `please don\'t use callback in an async function`);
+      assert.equal(err.message, `please don't use callback in an async function`);
       assert.equal(status.a, true);
       assert.equal(status.b, true);
       assert.equal(status.c, true);
@@ -302,26 +300,20 @@ describe('ProjectCore', function () {
 
     const status = { count: 0 };
 
-    async function sleep(ms) {
-      return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-      });
-    }
-
-    project.init.add(async function (status) {
-      await sleep(10);
+    project.init.add(coroutine.wrap(function* (status) {
+      yield coroutine.delay(10);
       status.a = true;
-    });
+    }));
 
-    project.init.add(async function (status) {
-      await sleep(10);
+    project.init.add(coroutine.wrap(function* (status) {
+      yield coroutine.delay(10);
       status.b = true;
-    });
+    }));
 
-    project.init.add(async function (status) {
-      await sleep(10);
+    project.init.add(coroutine.wrap(function* (status) {
+      yield coroutine.delay(10);
       status.c = true;
-    });
+    }));
 
     project.init.load(path.resolve(__dirname, './tasks2/a.js'));
 
@@ -346,34 +338,28 @@ describe('ProjectCore', function () {
 
     const status = { count: 0 };
 
-    async function sleep(ms) {
-      return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-      });
-    }
-
-    project.run(async function () {
-      await sleep(10);
+    project.run(coroutine.wrap(function* () {
+      yield coroutine.delay(10);
       status.a = true;
-    }, err => {
+    }), err => {
       assert.equal(err, null);
       assert.equal(status.a, true);
       checkDone();
     });
 
-    project.run(async function () {
-      await sleep(10);
+    project.run(coroutine.wrap(function* () {
+      yield coroutine.delay(10);
       status.b = true;
-    }, err => {
+    }), err => {
       assert.equal(err, null);
       assert.equal(status.b, true);
       checkDone();
     });
 
-    project.run(async function () {
-      await sleep(10);
+    project.run(coroutine.wrap(function* () {
+      yield coroutine.delay(10);
       status.c = true;
-    }, err => {
+    }), err => {
       assert.equal(err, null);
       assert.equal(status.c, true);
       checkDone();
@@ -408,34 +394,28 @@ describe('ProjectCore', function () {
 
     const status = { count: 0 };
 
-    async function sleep(ms) {
-      return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-      });
-    }
-
-    project.run(async function (status) {
-      await sleep(10);
+    project.run(coroutine.wrap(function* (status) {
+      yield coroutine.delay(10);
       status.a = true;
-    }, status, err => {
+    }), status, err => {
       assert.equal(err, null);
       assert.equal(status.a, true);
       checkDone();
     });
 
-    project.run(async function (status) {
-      await sleep(10);
+    project.run(coroutine.wrap(function* (status) {
+      yield coroutine.delay(10);
       status.b = true;
-    }, status, err => {
+    }), status, err => {
       assert.equal(err, null);
       assert.equal(status.b, true);
       checkDone();
     });
 
-    project.run(async function (status) {
-      await sleep(10);
+    project.run(coroutine.wrap(function* (status) {
+      yield coroutine.delay(10);
       status.c = true;
-    }, status, err => {
+    }), status, err => {
       assert.equal(err, null);
       assert.equal(status.c, true);
       checkDone();
