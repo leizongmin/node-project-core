@@ -1,6 +1,6 @@
 {
   "name": "project-core",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "project core",
   "main": "index.js",
   "files": [
@@ -8,9 +8,9 @@
   ],
   "scripts": {
     "test": "npm run lint && mocha -t 5000",
-    "coverage": "istanbul cover _mocha -- dist/test/*.js",
+    "coverage": "istanbul cover _mocha",
     "clean": "rm -rf dist",
-    "prepublish": "npm run test",
+    "prepublish": "npm run coverage",
     "lint": "eslint lib test --fix && echo 'eslint passed'"
   },
   "repository": {
