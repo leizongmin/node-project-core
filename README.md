@@ -29,6 +29,8 @@
 $ npm install project-core --save
 ```
 
+**Notes: only support Node.js v6.0 or above**
+
 
 ## Usage
 
