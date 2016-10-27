@@ -8,10 +8,9 @@
   ],
   "scripts": {
     "test": "npm run lint && mocha -t 5000",
-    "coverage": "istanbul cover _mocha",
-    "clean": "rm -rf dist",
-    "prepublish": "npm run coverage",
-    "lint": "eslint lib test --fix && echo 'eslint passed'"
+    "test-cov": "istanbul cover _mocha --report lcovonly -- -t 5000 -R spec && cat ./coverage/lcov.info | coveralls",
+    "lint": "eslint lib test --fix",
+    "prepublish": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -32,6 +31,7 @@
   },
   "devDependencies": {
     "async": "^2.1.2",
+    "coveralls": "^2.11.14",
     "eslint": "^3.8.1",
     "eslint-config-lei": "^0.0.10",
     "eslint-plugin-promise": "^3.3.0",
