@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/leizongmin/node-project-core#readme",
   "dependencies": {
-    "debug": "2.6.0",
+    "debug": "2.6.5",
     "js-yaml": "^3.6.1",
     "lei-ns": "^0.4.0",
     "lei-utils": "^3.0.0",
