@@ -37,6 +37,6 @@
     "eslint-plugin-promise": "^3.3.0",
     "istanbul": "^0.4.5",
     "lei-coroutine": "^1.2.0",
-    "mocha": "^3.0.2"
+    "mocha": "^3.4.0"
   }
 }
