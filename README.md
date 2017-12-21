@@ -22,6 +22,8 @@
 
 # project-core
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/leizongmin/node-project-core.svg)](https://greenkeeper.io/)
+
 ## Installation
 
 ```bash
