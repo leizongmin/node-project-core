@@ -23,20 +23,20 @@
   },
   "homepage": "https://github.com/leizongmin/node-project-core#readme",
   "dependencies": {
-    "debug": "2.6.0",
+    "debug": "3.1.0",
     "js-yaml": "^3.6.1",
     "lei-ns": "^0.4.0",
     "lei-utils": "^3.0.0",
-    "rd": "1.0.0"
+    "rd": "1.1.2"
   },
   "devDependencies": {
     "async": "^2.1.2",
-    "coveralls": "^2.11.14",
-    "eslint": "^3.8.1",
+    "coveralls": "^3.0.0",
+    "eslint": "^4.13.1",
     "eslint-config-lei": "^0.0.16",
     "eslint-plugin-promise": "^3.3.0",
     "istanbul": "^0.4.5",
     "lei-coroutine": "^1.2.0",
-    "mocha": "^3.0.2"
+    "mocha": "^4.0.1"
   }
 }
